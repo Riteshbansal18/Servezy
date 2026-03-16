@@ -1,0 +1,13 @@
+# Node modules
+node_modules/
+api/node_modules/
+client/node_modules/
+socket/node_modules
+
+echo "# Servezy_Final" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/Mayank-Sr/Servezy_Final.git
+git push -u origin main
