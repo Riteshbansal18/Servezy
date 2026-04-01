@@ -39,9 +39,9 @@ export default function Chat({ type }) {
       }, 1000);
     })
   }, [])
-
   return (
     <>
+    
       {loading && <Loading />}
       <div className='Chat'>
         <div className="container">
@@ -85,8 +85,6 @@ export default function Chat({ type }) {
                 }
               </div>
             }
-
-
           </div>
           {type == "freelancer" ? <FreelancerMenu active="chat" /> : <ClientMenu active="chat" />}
 
