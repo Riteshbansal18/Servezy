@@ -6,7 +6,23 @@ export const tokenExists = async (stateToken, navigate, dispatch) => {
   if (stateToken == null) {
     const localStorageToken = localStorage.getItem("token");
     const localStorageUser = JSON.parse(localStorage.getItem("userInfo"));
-    if (localStorageToken) {
+    if (localStorageToken && localStorageUser) {
+      // Check if JWT is expired
+      try {
+        const payload = JSON.parse(atob(localStorageToken.split('.')[1]));
+        if (payload.exp && Date.now() / 1000 > payload.exp) {
+          // Token expired — clear storage and redirect
+          localStorage.removeItem("token");
+          localStorage.removeItem("userInfo");
+          navigate("/login");
+          return false;
+        }
+      } catch {
+        localStorage.removeItem("token");
+        localStorage.removeItem("userInfo");
+        navigate("/login");
+        return false;
+      }
       dispatch(setToken(localStorageToken));
       dispatch(setAvatar(localStorageUser.image));
       dispatch(setUserId(localStorageUser._id));
@@ -22,6 +38,38 @@ export const signUp = createAsyncThunk(
   async (body, { rejectWithValue }) => {
     try {
       const res = await myAxios.post("/user/register", body);
+      return res.data;
+    } catch (e) {
+      if (e.message == "Network Error") {
+        return rejectWithValue("Check The Server");
+      }
+    }
+  }
+);
+// Verify OTP
+export const verifyOtp = createAsyncThunk(
+  "user/verifyOtp",
+  async (body, { rejectWithValue }) => {
+    try {
+      const res = await myAxios.post("/user/verify-otp", body, {
+        headers: { "Content-Type": "application/json" },
+      });
+      return res.data;
+    } catch (e) {
+      if (e.message == "Network Error") {
+        return rejectWithValue("Check The Server");
+      }
+    }
+  }
+);
+// Resend OTP
+export const resendOtp = createAsyncThunk(
+  "user/resendOtp",
+  async (body, { rejectWithValue }) => {
+    try {
+      const res = await myAxios.post("/user/resend-otp", body, {
+        headers: { "Content-Type": "application/json" },
+      });
       return res.data;
     } catch (e) {
       if (e.message == "Network Error") {

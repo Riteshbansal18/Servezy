@@ -25,7 +25,6 @@ export default function FreelancerDashboard() {
         dispatch(myDashboard()).unwrap().then(data => {
             setTimeout(() => {
                 setLoading(false)
-                console.log(data)
                 if (data.status == 404 || data.status == 403) {
                     toast.error(data.msg)
                     navigate('/login')

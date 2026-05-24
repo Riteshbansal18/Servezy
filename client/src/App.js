@@ -5,6 +5,8 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import PageNotFound from "./components/PageNotFound";
 import Signup from "./components/Signup";
+import VerifyEmail from "./components/VerifyEmail";
+import ForgotPassword from "./components/ForgotPassword";
 import Chat from "./components/Chat";
 import Profile from "./components/Profile";
 
@@ -13,6 +15,7 @@ import FreelancerServices from "./components/FreelancerComponents/FreelancerServ
 import FreelancerCreateService from "./components/FreelancerComponents/FreelancerCreateService";
 import FreelancerManageServices from "./components/FreelancerComponents/FreelancerManageServices";
 import FreelancerUpdateService from "./components/FreelancerComponents/FreelancerUpdateService";
+import FreelancerOrders from "./components/FreelancerComponents/FreelancerOrders";
 import ServiceDetails from "./components/ServiceDetails";
 
 import ClientDashboard from "./components/ClientComponents/ClientDashboard";
@@ -28,6 +31,8 @@ function App() {
           <Route exact path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/dashboard/freelancer/:id">
             <Route index element={<FreelancerDashboard />} />
             <Route path="/dashboard/freelancer/:id/services">
@@ -52,6 +57,10 @@ function App() {
             <Route
               path="/dashboard/freelancer/:id/chat"
               element={<Chat type="freelancer" />}
+            />
+            <Route
+              path="/dashboard/freelancer/:id/orders"
+              element={<FreelancerOrders />}
             />
             <Route
               path="/dashboard/freelancer/:id/profile"

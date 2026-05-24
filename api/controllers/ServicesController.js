@@ -38,7 +38,7 @@ const findServices = async () => {
   return services;
 };
 
-const createService = async (title, description, price, userId, images) => {
+const createService = async (title, description, price, userId, images, category, deliveryTime) => {
   const oldService = (await findServices()).find(
     (service) => service.title == title && service.userId == userId
   );
@@ -47,10 +47,12 @@ const createService = async (title, description, price, userId, images) => {
   }
   const createdService = await Service.create({
     title,
-    description: description,
+    description,
     price,
     images: images.join("|"),
     userId,
+    category: category || "Other",
+    deliveryTime: deliveryTime ? parseInt(deliveryTime) : 7,
   });
   return createdService;
 };
@@ -61,7 +63,9 @@ const updateService = async (
   price,
   userId,
   images,
-  serviceId
+  serviceId,
+  category,
+  deliveryTime
 ) => {
   const selectedUser = await findUserById(userId);
   if (selectedUser) {
@@ -84,12 +88,14 @@ const updateService = async (
           unlinkSync(`./uploads/UsersServices/${imageName}`);
         }
       }
-      const updatedService = await Service.findByIdAndUpdate(serviceId, {
+      await Service.findByIdAndUpdate(serviceId, {
         title,
         description,
         price,
         images: images.join("|"),
         userId,
+        category: category || service.category || "Other",
+        deliveryTime: deliveryTime ? parseInt(deliveryTime) : (service.deliveryTime || 7),
       });
       return "Service Updated Successfully";
     }
@@ -103,7 +109,7 @@ const deleteService = async (userId, serviceId) => {
   if (selectedUser) {
     const service = await findServiceById(serviceId);
     if (service) {
-      if (userId != service.userId) return -1;
+      if (userId !== service.userId.toString()) return -1;
       for (let imageName of service.images.split("|")) {
         if (existsSync(`./uploads/UsersServices/${imageName}`)) {
           unlinkSync(`./uploads/UsersServices/${imageName}`);

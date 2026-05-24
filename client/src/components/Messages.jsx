@@ -8,6 +8,9 @@ import moment from 'moment'
 import { sendMessage } from '../Redux/ChatSlice';
 import io from 'socket.io-client'
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
+const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || "ws://localhost:8900";
+
 export default function Message({ selectedMessage }) {
     const message = useRef()
     const chat = useRef()
@@ -39,7 +42,7 @@ export default function Message({ selectedMessage }) {
     }, [selectedMessage]);
 
     useEffect(() => {
-        socket.current = io("ws://localhost:8900")
+        socket.current = io(SOCKET_URL)
         socket.current.on('getMessage', (data) => {
             setArrivalMessage({
                 senderId: data.senderId,
@@ -69,7 +72,7 @@ export default function Message({ selectedMessage }) {
     }, [messages])
 
     const sendMessageAndDisplay = () => {
-        if (message.current.value.trim() != "") {
+        if (message.current.value.trim() !== "") {
             const text = message.current.value.trim()
             socket.current.emit('sendMessage', {
                 senderId: id,
@@ -108,7 +111,13 @@ export default function Message({ selectedMessage }) {
             }).catch((rejectedValueOrSerializedError) => {
                 toast.error(rejectedValueOrSerializedError)
             })
+        }
+    }
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault()
+            sendMessageAndDisplay()
         }
     }
 
@@ -118,9 +127,8 @@ export default function Message({ selectedMessage }) {
                 messages?.messages?.withInfo &&
                 <>
                     <div className="selectedMessageHeader">
-                        <img src={messages?.messages?.withInfo?.avatar == "no-image.png" ? noImage : `http://localhost:3001/ProfilePic/${messages?.messages?.withInfo?.avatar}`} alt="image test" />
+                        <img src={messages?.messages?.withInfo?.avatar === "no-image.png" ? noImage : `${API_URL}/ProfilePic/${messages?.messages?.withInfo?.avatar}`} alt={messages?.messages?.withInfo?.username} />
                         <span>{messages?.messages?.withInfo?.username}</span>
-
                     </div>
                     <div className="messageDate">
                         {moment(messages?.messages?.chatTime).format('LLL')}
@@ -137,8 +145,6 @@ export default function Message({ selectedMessage }) {
                     </div>
                 </>
             }
-
-
             <hr />
             <div className="sendBox">
                 <div className="inputbox">
@@ -147,7 +153,13 @@ export default function Message({ selectedMessage }) {
                             <path id="paper-clip" d="M20.665,13.2a3.9,3.9,0,0,0-5.025,0L5.18,22.435a4.968,4.968,0,0,0,0,7.646,6.715,6.715,0,0,0,8.664,0l8.641-7.626a1.75,1.75,0,0,1,2.251,0,1.294,1.294,0,0,1,0,1.987l-8.641,7.626a10.2,10.2,0,0,1-13.166,0,7.549,7.549,0,0,1,0-11.619l10.46-9.231a7.384,7.384,0,0,1,9.528,0,5.464,5.464,0,0,1,0,8.408l-10.005,8.83a4.567,4.567,0,0,1-5.889,0,3.379,3.379,0,0,1,0-5.2l8.186-7.224a1.75,1.75,0,0,1,2.251,0,1.294,1.294,0,0,1,0,1.987L9.273,25.244a.8.8,0,0,0,0,1.224,1.08,1.08,0,0,0,1.387,0l10.005-8.83a2.883,2.883,0,0,0,0-4.435Z" transform="translate(-0.2 -9.475)" fill="rgba(112,112,112,0.5)" />
                         </svg>
                     </div>
-                    <textarea ref={message} name="sendMessage" id="sendMessage" placeholder="Write Your Message Here"></textarea>
+                    <textarea
+                        ref={message}
+                        name="sendMessage"
+                        id="sendMessage"
+                        placeholder="Write your message... (Enter to send, Shift+Enter for new line)"
+                        onKeyDown={handleKeyDown}
+                    ></textarea>
                 </div>
                 <button onClick={() => sendMessageAndDisplay()}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25">
@@ -155,6 +167,6 @@ export default function Message({ selectedMessage }) {
                     </svg>
                 </button>
             </div>
-        </div >
+        </div>
     )
 }

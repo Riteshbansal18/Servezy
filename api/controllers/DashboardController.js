@@ -15,35 +15,20 @@ const freelancerDashboard = async (userId) => {
     let freelancerRevenues = 0;
     let completedOrders = 0;
 
-    const orders = await Order.find({ status: "Completed" });
-    const allOrders = await Order.find();
-    if (allOrders.length != 0) {
-      for (let i of allOrders) {
-        const selectedService = await Service.findById(i.serviceId);
-        if (
-          selectedService.userId.toString() == selectedFreelancer._id.toString()
-        ) {
-          ordersNumber++;
-        }
-      }
-    }
-    if (orders.length != 0) {
-      for (let i of orders) {
-        const selectedService = await Service.findById(i.serviceId);
-        if (
-          selectedService.userId.toString() == selectedFreelancer._id.toString()
-        ) {
-          completedOrders++;
-          freelancerRevenues += selectedService.price;
-        }
-      }
-    }
-
     let freelancerRating = 0;
     let freelancerTestimonials = [];
 
     const services = await Service.find({ userId: selectedFreelancer });
     if (services.length != 0) {
+      // Orders aggregation (avoid N+1)
+      const allOrders = await Order.find({ serviceId: { $in: services.map(s => s._id) } });
+      const completedOrdersList = allOrders.filter(o => o.status === "Completed");
+      ordersNumber = allOrders.length;
+      for (let order of completedOrdersList) {
+        const svc = services.find(s => s._id.toString() === order.serviceId.toString());
+        if (svc) { completedOrders++; freelancerRevenues += svc.price; }
+      }
+
       // Rating
       let servicesNumber = 0;
       let sumServiceRating = 0;

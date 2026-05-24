@@ -69,8 +69,7 @@ const chatSlice = createSlice({
   },
   reducers: {
     setNewMessages: (state, action) => {
-      state.messages.conversationMessages =
-        state.messages.messages.conversationMessages.push(action.payload);
+      state.messages.conversationMessages.push(action.payload);
     },
   },
   extraReducers: (builder) => {

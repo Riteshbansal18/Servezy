@@ -14,6 +14,7 @@ export default function FreelancerCreateService() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [loading, setLoading] = useState()
+    const [imagePreviews, setImagePreviews] = useState([])
     const gig = useRef()
     const description = useRef()
     const price = useRef()
@@ -22,6 +23,12 @@ export default function FreelancerCreateService() {
     useEffect(() => {
         tokenExists(token, navigate, dispatch).then(data => (data == false || JSON.parse(localStorage.getItem('userInfo')).role != "freelancer" || JSON.parse(localStorage.getItem('userInfo'))._id != id) && navigate("/login"))
     }, [])
+
+    const handleImageChange = (e) => {
+        const files = Array.from(e.target.files)
+        const previews = files.map(file => URL.createObjectURL(file))
+        setImagePreviews(previews)
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -36,37 +43,28 @@ export default function FreelancerCreateService() {
             toast.error("Fill The Form");
         } else {
             if (!/^[a-zA-Z0-9\s\-\,\(\)]{20,}$/.test(myForm.gig)) {
-                err.push('Gig invalid. It must contain letters and more than 20 caracters')
+                err.push('Gig invalid. It must contain letters and more than 20 characters')
             }
             if (!/^.*[a-zA-Z]+.*$/mg.test(myForm.description) || myForm.description.length < 20) {
-                err.push('Description invalid. It must contain letters and more than 20 caracters')
+                err.push('Description invalid. It must contain letters and more than 20 characters')
             }
             if (!/^\d+$/.test(myForm.price) || parseFloat(myForm.price) < 5) {
                 err.push('Price Invalid. It must be a number greater or equal to 5');
             }
-            if (myForm.image.files.length == 0 || myForm.image.files.length < 3 || myForm.image.files.length > 6) {
-                err.push('Please select between 3 and 6 images');
-            }
-            else {
+            if (myForm.image.files.length == 0 || myForm.image.files.length < 2 || myForm.image.files.length > 6) {
+                err.push('Please select between 2 and 6 images');
+            } else {
                 let cpt = 0
                 for (let i of myForm.image.files) {
-                    if (i.size > (4 * 1024 * 1024)) {
-                        cpt++
-                    }
+                    if (i.size > (4 * 1024 * 1024)) cpt++
                 }
-                if (cpt != 0) {
-                    err.push('Each Image Should Have Maximum Size 4MB');
-                }
+                if (cpt != 0) err.push('Each Image Should Have Maximum Size 4MB');
             }
             if (err.length != 0) {
-                toast.error(
-                    <div>
-                        {err.map((e, i) => <p key={i}>{e}</p>)}
-                    </div>);
+                toast.error(<div>{err.map((e, i) => <p key={i}>{e}</p>)}</div>);
             } else {
                 setLoading(true)
                 const body = new FormData()
-
                 body.append('title', myForm.gig)
                 body.append('description', myForm.description)
                 body.append('price', myForm.price)
@@ -94,6 +92,7 @@ export default function FreelancerCreateService() {
             }
         }
     }
+
     return (
         <>
             {loading && <Loading />}
@@ -101,26 +100,36 @@ export default function FreelancerCreateService() {
                 <div className="container">
                     <div className="section">
                         <HashLink className="go-back-button" to={`/dashboard/freelancer/${id}/services`}><button>Go Back</button></HashLink>
-                        <div className="createHeader">
-                            Create Service
-                        </div>
+                        <div className="createHeader">Create Service</div>
                         <form encType="multipart/form-data" onSubmit={e => handleSubmit(e)}>
                             <div className="form-section">
                                 <label htmlFor="gig">Gig</label>
-                                <input type="text" name="gig" ref={gig} placeholder="Ex:Create a WordPress Website" id="gig" />
+                                <input type="text" name="gig" ref={gig} placeholder="Ex: Create a WordPress Website" id="gig" />
                             </div>
                             <div className="form-section">
                                 <label htmlFor="description">Description</label>
                                 <textarea name="description" maxLength={1050} ref={description} id="description" placeholder="Enter Description"></textarea>
                             </div>
                             <div className="form-section">
-                                <label htmlFor="price">Price</label>
+                                <label htmlFor="price">Price ($)</label>
                                 <input type="text" name="price" ref={price} placeholder="Enter Price" id="price" />
                             </div>
                             <div className="form-section">
-                                <label className="images" htmlFor="images">Select Images</label>
-                                <input type="file" ref={image} name="images" multiple id="images" />
+                                <label className="images" htmlFor="images">Select Images (2–6)</label>
+                                <input type="file" ref={image} name="images" multiple id="images" onChange={handleImageChange} />
                             </div>
+                            {imagePreviews.length > 0 && (
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '10px' }}>
+                                    {imagePreviews.map((src, i) => (
+                                        <img
+                                            key={i}
+                                            src={src}
+                                            alt={`preview ${i + 1}`}
+                                            style={{ width: '100px', height: '80px', objectFit: 'cover', borderRadius: '8px', border: '2px solid var(--color-light-orange)' }}
+                                        />
+                                    ))}
+                                </div>
+                            )}
                             <button>Create</button>
                         </form>
                     </div>
@@ -128,6 +137,5 @@ export default function FreelancerCreateService() {
                 </div>
             </div>
         </>
-
     )
 }

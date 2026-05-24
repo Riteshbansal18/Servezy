@@ -4,6 +4,8 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
+
 export default function Slider({ images }) {
     return (
         <Swiper
@@ -15,7 +17,7 @@ export default function Slider({ images }) {
             pagination={{ clickable: true }}
         >
             {images.map((imageSrc, i) => <SwiperSlide key={i}>
-                <img src={`http://localhost:3001/ServicePic/${imageSrc}`} alt="" />
+                <img src={`${API_URL}/ServicePic/${imageSrc}`} alt="Service" />
             </SwiperSlide>)}
         </Swiper>
     )

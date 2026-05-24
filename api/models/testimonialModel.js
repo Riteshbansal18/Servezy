@@ -3,8 +3,8 @@ const { Schema } = require("mongoose");
 
 const TestimonialModel = new Schema(
   {
-    clientId: Schema.Types.ObjectId,
-    serviceId: Schema.Types.ObjectId,
+    clientId: { type: Schema.Types.ObjectId, index: true },
+    serviceId: { type: Schema.Types.ObjectId, index: true },
     text: String,
     rating: Number,
   },

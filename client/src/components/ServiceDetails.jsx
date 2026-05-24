@@ -12,6 +12,10 @@ import Slider from './Slider';
 import noImage from "../../src/assets/Images/no-image.png"
 import ClientMenu from './ClientComponents/ClientMenu';
 import Loading from './Loading';
+import io from 'socket.io-client';
+
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
+const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || "ws://localhost:8900";
 
 export default function ServiceDetails({ type }) {
     const { id, serviceId } = useParams()
@@ -23,6 +27,17 @@ export default function ServiceDetails({ type }) {
     const testimonial = useRef()
     const [starNumber, setStarNumber] = useState(0)
     const [hoverStar, setHoverStar] = useState(undefined)
+    const socket = useRef()
+
+    // Connect socket and register user
+    useEffect(() => {
+        socket.current = io(SOCKET_URL)
+        const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+        if (userInfo?._id) {
+            socket.current.emit('addUser', userInfo._id)
+        }
+        return () => { socket.current.disconnect() }
+    }, [])
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -72,12 +87,8 @@ export default function ServiceDetails({ type }) {
             dispatch(showService(serviceId)).unwrap().then(data => {
                 setTimeout(() => {
                     setLoading(false)
-                    if (data.status == 404) {
-                        navigate('/404')
-                    }
-                    if (data.status == 505) {
-                        toast.error(data.msg)
-                    }
+                    if (data.status == 404) { navigate('/404') }
+                    if (data.status == 505) { toast.error(data.msg) }
                 }, 1000);
             }).catch((rejectedValueOrSerializedError) => {
                 setTimeout(() => {
@@ -90,12 +101,8 @@ export default function ServiceDetails({ type }) {
             dispatch(serviceInfo(serviceId)).unwrap().then(data => {
                 setTimeout(() => {
                     setLoading(false)
-                    if (data.status == 404) {
-                        navigate('/404')
-                    }
-                    if (data.status == 505) {
-                        toast.error(data.msg)
-                    }
+                    if (data.status == 404) { navigate('/404') }
+                    if (data.status == 505) { toast.error(data.msg) }
                 }, 1000);
             }).catch((rejectedValueOrSerializedError) => {
                 setTimeout(() => {
@@ -108,12 +115,8 @@ export default function ServiceDetails({ type }) {
             dispatch(orderInfo(serviceId)).unwrap().then(data => {
                 setTimeout(() => {
                     setLoading(false)
-                    if (data.status == 404) {
-                        navigate('/404')
-                    }
-                    if (data.status == 505) {
-                        toast.error(data.msg)
-                    }
+                    if (data.status == 404) { navigate('/404') }
+                    if (data.status == 505) { toast.error(data.msg) }
                 }, 1000);
             }).catch((rejectedValueOrSerializedError) => {
                 setTimeout(() => {
@@ -125,10 +128,13 @@ export default function ServiceDetails({ type }) {
     }
 
     useEffect(() => {
-        tokenExists(token, navigate, dispatch).then(data => (data == false || JSON.parse(localStorage.getItem('userInfo'))._id != id || window.location.href.slice(32).split('/')[0] != JSON.parse(localStorage.getItem('userInfo')).role) && navigate("/login"))
+        tokenExists(token, navigate, dispatch).then(data => {
+            if (data === false) { navigate("/login"); return; }
+            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            if (!userInfo || userInfo._id !== id) { navigate("/login"); }
+        })
         fetchData()
     }, [])
-
 
     const handleOrder = () => {
         setLoading(true)
@@ -137,6 +143,15 @@ export default function ServiceDetails({ type }) {
                 setLoading(false)
                 if (data.status == 200) {
                     toast.success(data.msg)
+                    // Emit real-time order notification to the freelancer
+                    if (socket.current && window.__serviceOwnerUserId) {
+                        const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+                        socket.current.emit('sendOrderNotification', {
+                            freelancerId: window.__serviceOwnerUserId,
+                            clientName: userInfo?.username || userInfo?.fullName || 'A client',
+                            serviceTitle: window.__serviceTitle || 'your service',
+                        })
+                    }
                     navigate(`/dashboard/client/${id}/orders`)
                 }
                 else if (data.status == 400) {
@@ -164,6 +179,7 @@ export default function ServiceDetails({ type }) {
             }, 1000);
         })
     }
+
     const handleUpdate = (e) => {
         setLoading(true)
         const status = e.target.name
@@ -199,6 +215,18 @@ export default function ServiceDetails({ type }) {
             }, 1000);
         })
     }
+
+    // Store service owner info for socket notification
+    useEffect(() => {
+        if (data?.selectedService?.userId) {
+            const ownerId = typeof data.selectedService.userId === 'object'
+                ? data.selectedService.userId._id
+                : data.selectedService.userId
+            window.__serviceOwnerUserId = ownerId
+            window.__serviceTitle = data.selectedService.title
+        }
+    }, [data])
+
     return (
         <>
             {loading && <Loading />}
@@ -217,6 +245,19 @@ export default function ServiceDetails({ type }) {
                                             <div className="service-title">
                                                 {data.selectedService.title}
                                             </div>
+                                            {/* Category & Delivery Time badges */}
+                                            <div className="service-meta-badges">
+                                                {data.selectedService.category && (
+                                                    <span className="badge badge-category">
+                                                        {data.selectedService.category}
+                                                    </span>
+                                                )}
+                                                {data.selectedService.deliveryTime && (
+                                                    <span className="badge badge-delivery">
+                                                        ? {data.selectedService.deliveryTime} day{data.selectedService.deliveryTime > 1 ? 's' : ''} delivery
+                                                    </span>
+                                                )}
+                                            </div>
                                             <div className="service-description">
                                                 {data.selectedService.description.split('\n').map((line, i) =>
                                                     <p key={i}>{line}</p>
@@ -233,7 +274,11 @@ export default function ServiceDetails({ type }) {
                                                     </div>
                                                     <div className="provider">
                                                         <span>Service Provided By</span>
-                                                        <img src={data.selectedService.userId.image === 'no-image.png' ? noImage : `http://localhost:3001/ProfilePic/${data.selectedService.userId.image}`} alt="Profile Picture" />
+                                                        <img
+                                                            loading="lazy"
+                                                            src={data.selectedService.userId.image === 'no-image.png' ? noImage : `${API_URL}/ProfilePic/${data.selectedService.userId.image}`}
+                                                            alt="Profile"
+                                                        />
                                                     </div>
                                                 </div>
                                             }
@@ -259,6 +304,19 @@ export default function ServiceDetails({ type }) {
                                     <div className="service-title">
                                         {data.clientOrderInfo.serviceInfo.title}
                                     </div>
+                                    {/* Category & Delivery Time badges */}
+                                    <div className="service-meta-badges">
+                                        {data.clientOrderInfo.serviceInfo.category && (
+                                            <span className="badge badge-category">
+                                                {data.clientOrderInfo.serviceInfo.category}
+                                            </span>
+                                        )}
+                                        {data.clientOrderInfo.serviceInfo.deliveryTime && (
+                                            <span className="badge badge-delivery">
+                                                ? {data.clientOrderInfo.serviceInfo.deliveryTime} day{data.clientOrderInfo.serviceInfo.deliveryTime > 1 ? 's' : ''} delivery
+                                            </span>
+                                        )}
+                                    </div>
                                     <div className="service-description">
                                         {data.clientOrderInfo.serviceInfo.description.split('\n').map((line, i) =>
                                             <p key={i}>{line}</p>
@@ -270,7 +328,11 @@ export default function ServiceDetails({ type }) {
                                         </div>
                                         <div className="provider">
                                             <span>Service Provided By</span>
-                                            <img src={data.clientOrderInfo.serviceUserInfo.image === 'no-image.png' ? noImage : `http://localhost:3001/ProfilePic/${data.clientOrderInfo.serviceUserInfo.image}`} alt="Profile Picture" />
+                                            <img
+                                                loading="lazy"
+                                                src={data.clientOrderInfo.serviceUserInfo.image === 'no-image.png' ? noImage : `${API_URL}/ProfilePic/${data.clientOrderInfo.serviceUserInfo.image}`}
+                                                alt="Profile"
+                                            />
                                         </div>
                                     </div>
                                     {
@@ -285,7 +347,7 @@ export default function ServiceDetails({ type }) {
                                             <>
                                                 <div className="testimonialForm">
                                                     <form onSubmit={e => handleSubmit(e)}>
-                                                        <img src={avatar === 'no-image.png' ? noImage : `http://localhost:3001/ProfilePic/${avatar}`} alt="Profile Picture" />
+                                                        <img loading="lazy" src={avatar === 'no-image.png' ? noImage : `${API_URL}/ProfilePic/${avatar}`} alt="Profile" />
                                                         <div className="form-input">
                                                             <div className="testimonialHeader">
                                                                 Add Testimonial

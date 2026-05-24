@@ -4,6 +4,8 @@ import { useRef } from 'react';
 import noImage from '../assets/Images/no-image.png';
 import { useNavigate } from 'react-router-dom';
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
+
 export default function Nav() {
     const { loggedUser, avatar } = useSelector(state => state.user)
     const dropdown = useRef()
@@ -62,7 +64,7 @@ export default function Nav() {
                                 <button><HashLink to="/login">Sign in</HashLink></button>
                                 :
                                 <div className="menu">
-                                    <img src={avatar === 'no-image.png' ? noImage : `http://localhost:3001/ProfilePic/${avatar}`} onClick={e => dropdown.current.classList.toggle('active')} alt="Profile Picture" />
+                                    <img src={avatar === 'no-image.png' ? noImage : `${API_URL}/ProfilePic/${avatar}`} onClick={e => dropdown.current.classList.toggle('active')} alt="Profile" />
                                     <div ref={dropdown} className="dropdown">
                                         <div className="link" onClick={e => handleProfile()}>Dashboard</div>
                                         <div className="link" onClick={e => handleLogOut()}>Log Out</div>

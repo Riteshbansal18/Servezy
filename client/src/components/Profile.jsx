@@ -9,6 +9,8 @@ import { useRef } from 'react';
 import { toast } from 'react-toastify';
 import Loading from './Loading';
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
+
 export default function Profile({ type }) {
     const [image, setImage] = useState(null)
     const [loading, setLoading] = useState(null)
@@ -22,16 +24,24 @@ export default function Profile({ type }) {
     const usernameInput = useRef()
 
     useEffect(() => {
-        tokenExists(token, navigate, dispatch).then(data => (data == false || JSON.parse(localStorage.getItem('userInfo'))._id != id || window.location.href.slice(32).split('/')[0] != JSON.parse(localStorage.getItem('userInfo')).role) && navigate("/login"))
+        tokenExists(token, navigate, dispatch).then(data => {
+            if (data === false) { navigate("/login"); return; }
+            const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            if (!userInfo || userInfo._id !== id || userInfo.role !== (type === "1" ? "freelancer" : "client")) {
+                navigate("/login");
+            }
+        })
         if (localStorage.getItem('userInfo')) {
             const localStorageUserInfo = JSON.parse(localStorage.getItem('userInfo'))
-            if (localStorageUserInfo.image != 'no-image.png') {
+            if (localStorageUserInfo.image !== 'no-image.png') {
                 setImage(localStorageUserInfo.image)
             }
             const userInfo = {
                 fullName: localStorageUserInfo.fullName,
                 age: localStorageUserInfo.age,
                 username: localStorageUserInfo.username,
+                email: localStorageUserInfo.email,
+                role: localStorageUserInfo.role,
             }
             setUserInfo(userInfo)
         }
@@ -123,7 +133,7 @@ export default function Profile({ type }) {
                         <form encType="multipart/form-data" onSubmit={e => e.preventDefault()}>
                             <div className="profileHeader">
                                 <div className="profiledescription">
-                                    <img src={image == null || avatar === 'no-image.png' ? noImage : `http://localhost:3001/ProfilePic/${avatar}`} alt="Profile Picture" />
+                                    <img src={image == null || avatar === 'no-image.png' ? noImage : `${API_URL}/ProfilePic/${avatar}`} alt="Profile" />
                                     <div className="profileName">
                                         <div className="name">
                                             {userInfo?.fullName}
@@ -132,7 +142,7 @@ export default function Profile({ type }) {
                                     </div>
                                 </div>
                                 <div className="profileheaderbuttons">
-                                    <button onClick={e => window.location.href = `/dashboard/client/${id}/profile`}>Cancel</button>
+                                    <button onClick={() => window.location.reload()}>Cancel</button>
                                     <button onClick={e => handleSave()}>Save</button>
                                 </div>
                             </div>
@@ -152,6 +162,16 @@ export default function Profile({ type }) {
                                     <input ref={usernameInput} type="text" name="username" id="username" defaultValue={userInfo?.username} />
                                 </div>
                                 <hr />
+                                <div className="inputSection">
+                                    <label>Email</label>
+                                    <input type="text" value={userInfo?.email || ''} readOnly style={{ opacity: 0.7, cursor: 'not-allowed' }} />
+                                </div>
+                                <hr />
+                                <div className="inputSection">
+                                    <label>Account Type</label>
+                                    <input type="text" value={userInfo?.role ? userInfo.role.charAt(0).toUpperCase() + userInfo.role.slice(1) : ''} readOnly style={{ opacity: 0.7, cursor: 'not-allowed', textTransform: 'capitalize' }} />
+                                </div>
+                                <hr />
                             </div>
                             <div className="profilePicture">
                                 <div className="profilePictureDescription">
@@ -160,7 +180,7 @@ export default function Profile({ type }) {
                                     </div>
                                     <span>This Will Be Displayed On Your Profile</span>
                                 </div>
-                                <img src={image == null || avatar === 'no-image.png' ? noImage : `http://localhost:3001/ProfilePic/${avatar}`} alt="Profile Picture" />
+                                <img src={image == null || avatar === 'no-image.png' ? noImage : `${API_URL}/ProfilePic/${avatar}`} alt="Profile" />
                                 <div className="picturebuttons">
                                     <label htmlFor="image">Upload</label>
                                     <input onChange={e => handleImage(e)} type="file" name="image" id="image" />

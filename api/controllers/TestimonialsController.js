@@ -24,17 +24,26 @@ const getServiceRating = async (serviceId) => {
   return "Service doesn't exists";
 };
 
+// Prevent duplicate testimonials on same order
 const createTestimonial = async (clientId, orderId, body) => {
   const userExists = await findUserById(clientId);
   if (userExists) {
-    const serviceExists = await Order.findById(orderId);
-    if (serviceExists) {
+    const orderExists = await Order.findById(orderId);
+    if (orderExists) {
       if (userExists.role != "client") {
         return "You Don't Have Permission";
       }
-      const createdTestimonial = await Testimonial.create({
+      // Check if testimonial already exists for this order
+      const alreadyReviewed = await Testimonial.findOne({
         clientId,
-        serviceId: serviceExists.serviceId,
+        serviceId: orderExists.serviceId,
+      });
+      if (alreadyReviewed) {
+        return "You already reviewed this service";
+      }
+      await Testimonial.create({
+        clientId,
+        serviceId: orderExists.serviceId,
         text: body.text,
         rating: body.rating,
       });

@@ -120,7 +120,7 @@ export default function Signup() {
                         if (data.status == 200) {
                             setLoading(false)
                             toast.success(data.msg)
-                            navigate('/login')
+                            navigate(`/verify-email?email=${encodeURIComponent(myForm.email)}`)
                         } else if (data.status === 403) {
                             toast.info(data.msg)
                         } else {

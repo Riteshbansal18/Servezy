@@ -16,6 +16,8 @@ import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { AiOutlinePlayCircle } from 'react-icons/ai';
 import { MdOutlineFilterAltOff } from 'react-icons/md';
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
+
 
 
 
@@ -100,7 +102,7 @@ export default function ClientOrders() {
                                             <Slider images={order.serviceInfo.images.split('|')} />
                                         </div>
                                         <div className="serviceHeader">
-                                            <img src={order.serviceUserInfo.image === 'no-image.png' ? noImage : `http://localhost:3001/ProfilePic/${order.serviceUserInfo.image}`} alt="" />
+                                            <img src={order.serviceUserInfo.image === 'no-image.png' ? noImage : `${API_URL}/ProfilePic/${order.serviceUserInfo.image}`} alt={order.serviceUserInfo.username} />
                                             <span>{order.serviceUserInfo.username}</span>
                                         </div>
                                         <div className="serviceBody">

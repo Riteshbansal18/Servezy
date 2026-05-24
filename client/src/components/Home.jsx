@@ -9,9 +9,9 @@ import { HashLink } from 'react-router-hash-link';
 import { tokenExists } from '../Redux/UserSlice';
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
+import myAxios from '../Redux/myAxios'
 
 export default function Home() {
     const { token } = useSelector(state => state.user)
@@ -20,11 +20,13 @@ export default function Home() {
     const fullName = useRef()
     const email = useRef()
     const message = useRef()
+    const [sending, setSending] = useState(false)
 
     useEffect(() => {
         tokenExists(token, navigate, dispatch)
     }, [])
-    const handleSubmit = (e) => {
+
+    const handleSubmit = async (e) => {
         e.preventDefault()
         let err = []
         const myForm = {
@@ -32,6 +34,12 @@ export default function Home() {
             email: (email.current.value).trim(),
             message: (message.current.value).trim(),
         }
+
+        if (myForm.fullName === "" && myForm.email === "" && myForm.message === "") {
+            toast.error('Please Fill The Inputs')
+            return
+        }
+
         if (!/^[a-zA-Z\s]+$/.test(myForm.fullName)) {
             err.push('Full Name invalid. It must only contain letters and space')
         }
@@ -39,34 +47,29 @@ export default function Home() {
             err.push('Email invalid. It must be in the format example@example.com');
         }
         if (myForm.message.length < 10) {
-            err.push('Message Should Contain More Than 10 Caracters')
+            err.push('Message should contain more than 10 characters')
         }
-        if ((myForm.fullName == "" && myForm.email == "" && myForm.message.value == "") || err.length != 0) {
-            if (myForm.fullName == "" && myForm.email == "" && message.current.value == "") {
-                toast.error('Please Fill The Inputs')
+
+        if (err.length !== 0) {
+            toast.error(<div>{err.map((e, i) => <p key={i}>{e}</p>)}</div>);
+            return
+        }
+
+        setSending(true)
+        try {
+            const res = await myAxios.post('/user/contact', myForm)
+            setSending(false)
+            if (res.data.status === 200) {
+                fullName.current.value = ""
+                email.current.value = ""
+                message.current.value = ""
+                toast.success('Thank you! We will get back to you soon.')
+            } else {
+                toast.error('Failed to send message. Please try again.')
             }
-            else
-                toast.error(
-                    <div>
-                        {err.map((e, i) => <p key={i}>{e}</p>)}
-                    </div>,
-                    {
-                        position: "top-right",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "light",
-                    }
-                );
-        }
-        else {
-            fullName.current.value = ""
-            email.current.value = ""
-            message.current.value = ""
-            toast.success(<p>Thank You For Contacting Us.<br /><br /> We Will Look At Your Message As Soon As Possible</p>)
+        } catch {
+            setSending(false)
+            toast.error('Network error. Please try again.')
         }
     }
     return (
@@ -161,7 +164,7 @@ export default function Home() {
                                         <textarea name="message" ref={message} maxLength={255} id="message" placeholder="Enter Your Message">
                                         </textarea>
                                     </div>
-                                    <button>Send</button>
+                                    <button disabled={sending}>{sending ? 'Sending...' : 'Send'}</button>
                                 </form>
                             </div>
                         </div>

@@ -6,6 +6,10 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { store } from "./Redux/store";
 import { Provider } from "react-redux";
+import AOS from "aos";
+import "aos/dist/aos.css";
+
+AOS.init({ duration: 800, once: true });
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 

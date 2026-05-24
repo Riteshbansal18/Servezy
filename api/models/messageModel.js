@@ -3,8 +3,8 @@ const { Schema } = require("mongoose");
 
 const MessageModel = new Schema(
   {
-    chatId: Schema.Types.ObjectId,
-    senderId: Schema.Types.ObjectId,
+    chatId: { type: Schema.Types.ObjectId, index: true },
+    senderId: { type: Schema.Types.ObjectId, index: true },
     text: String,
   },
   { timestamps: true }

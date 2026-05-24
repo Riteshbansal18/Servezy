@@ -114,6 +114,9 @@ export default function Login() {
                             <div className="signupSection">
                                 <span>Not a member ?</span> <a href="/signup"><button>Sign Up</button></a>
                             </div>
+                            <div className="signupSection" style={{ marginTop: '10px' }}>
+                                <span>Forgot your password?</span> <a href="/forgot-password"><button>Reset</button></a>
+                            </div>
                         </div>
                     </section>
                 </div>

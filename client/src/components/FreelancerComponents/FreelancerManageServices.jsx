@@ -19,7 +19,7 @@ export default function FreelancerManageServices() {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        tokenExists(token, navigate, dispatch)
+        tokenExists(token, navigate, dispatch).then(data => (data == false || JSON.parse(localStorage.getItem('userInfo')).role !== "freelancer" || JSON.parse(localStorage.getItem('userInfo'))._id !== id) && navigate("/login"))
     }, [])
 
     const fetchFreelancerService = () => {

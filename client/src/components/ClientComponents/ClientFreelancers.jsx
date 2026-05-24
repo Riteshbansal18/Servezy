@@ -11,6 +11,8 @@ import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { tokenExists } from './../../Redux/UserSlice';
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
+
 export default function ClientServices() {
   const { token } = useSelector(state => state.user)
   const { data } = useSelector(state => state.client)
@@ -21,8 +23,9 @@ export default function ClientServices() {
   const { id } = useParams()
   const [order, setOrder] = useState("asc")
   const [loading, setLoading] = useState(true)
-
+  const [search, setSearch] = useState("")
   const [allServices, setAllServices] = useState([])
+  const [baseServices, setBaseServices] = useState([])
 
   useEffect(() => {
     tokenExists(token, navigate, dispatch).then(data => (data == false || JSON.parse(localStorage.getItem('userInfo')).role != "client" || JSON.parse(localStorage.getItem('userInfo'))._id != id) && navigate("/login"))
@@ -30,7 +33,6 @@ export default function ClientServices() {
 
   useEffect(() => {
     dispatch(freelancersServices()).unwrap().then(data => {
-      console.log(data)
       setTimeout(() => {
         const newAllServices = [...data.allServices];
         if (sort === "price") {
@@ -38,6 +40,7 @@ export default function ClientServices() {
         } else if (sort === "rating") {
           newAllServices.sort((a, b) => (order === "asc" ? a.serviceRating - b.serviceRating : b.serviceRating - a.serviceRating));
         }
+        setBaseServices(data.allServices);
         setAllServices(newAllServices);
         setLoading(false)
       }, 1000);
@@ -50,15 +53,18 @@ export default function ClientServices() {
   }, [])
 
   useEffect(() => {
-    const newAllServices = [...allServices];
+    const filtered = baseServices.filter(s =>
+      s.title.toLowerCase().includes(search.toLowerCase()) ||
+      s.userInfo.username.toLowerCase().includes(search.toLowerCase())
+    );
+    const sorted = [...filtered];
     if (sort === "price") {
-      newAllServices.sort((a, b) => (order === "asc" ? a.price - b.price : b.price - a.price));
+      sorted.sort((a, b) => (order === "asc" ? a.price - b.price : b.price - a.price));
     } else if (sort === "rating") {
-      newAllServices.sort((a, b) => (order === "asc" ? a.serviceRating - b.serviceRating : b.serviceRating - a.serviceRating));
+      sorted.sort((a, b) => (order === "asc" ? a.serviceRating - b.serviceRating : b.serviceRating - a.serviceRating));
     }
-    setAllServices(newAllServices);
-  }
-    , [order, sort])
+    setAllServices(sorted);
+  }, [order, sort, search, baseServices])
 
   return (
     <>
@@ -67,6 +73,22 @@ export default function ClientServices() {
         <div className="container">
           <div className="section">
             <div className="buttons">
+              <input
+                type="text"
+                placeholder="Search services or freelancers..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                style={{
+                  padding: '10px 20px',
+                  borderRadius: '10px',
+                  border: 'none',
+                  outline: 'none',
+                  fontSize: '16px',
+                  backgroundColor: 'var(--color-orange)',
+                  color: 'white',
+                  width: '280px',
+                }}
+              />
               <select onChange={e => setSort(e.target.value)}>
                 <option value="price">Sort By : Price</option>
                 <option value="rating">Sort By : Rating</option>
@@ -82,7 +104,7 @@ export default function ClientServices() {
                   <Slider images={service.images.split('|')} />
                 </div>
                 <div className="serviceHeader">
-                  <img src={service.userInfo.image === 'no-image.png' ? noImage : `http://localhost:3001/ProfilePic/${service.userInfo.image}`} alt="Profile Picture" />
+                  <img src={service.userInfo.image === 'no-image.png' ? noImage : `${API_URL}/ProfilePic/${service.userInfo.image}`} alt={service.userInfo.username} />
                   <span>{service.userInfo.username}</span>
                 </div>
                 <div className="serviceBody">

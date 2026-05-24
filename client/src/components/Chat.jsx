@@ -10,6 +10,8 @@ import { myConversations } from '../Redux/ChatSlice';
 import Loading from './Loading';
 import { toast } from 'react-toastify';
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
+
 export default function Chat({ type }) {
   const [selectedMessage, setSelectedMessage] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -20,7 +22,14 @@ export default function Chat({ type }) {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    tokenExists(token, navigate, dispatch).then(data => (data == false || JSON.parse(localStorage.getItem('userInfo'))._id != id || window.location.href.slice(32).split('/')[0] != JSON.parse(localStorage.getItem('userInfo')).role) && navigate("/login"))
+    tokenExists(token, navigate, dispatch).then(data => {
+      if (data === false) { navigate("/login"); return; }
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      const expectedRole = type === "freelancer" ? "freelancer" : "client";
+      if (!userInfo || userInfo._id !== id || userInfo.role !== expectedRole) {
+        navigate("/login");
+      }
+    })
     dispatch(myConversations()).unwrap().then(data => {
       setTimeout(() => {
         setLoading(false)
@@ -50,22 +59,23 @@ export default function Chat({ type }) {
               <>
                 <div className="messages">
                   {data?.userConversation?.map(conversation =>
-                    <div key={conversation._id} className={selectedMessage != conversation._id ? "messageSection" : "messageSection active"} onClick={() => setSelectedMessage(conversation._id)}>
-                      <img src={conversation.avatar == "no-image.png" ? noImage : `http://localhost:3001/ProfilePic/${conversation.avatar}`} alt="test image" />
+                    <div key={conversation._id} className={selectedMessage !== conversation._id ? "messageSection" : "messageSection active"} onClick={() => setSelectedMessage(conversation._id)}>
+                      <img src={conversation.avatar === "no-image.png" ? noImage : `${API_URL}/ProfilePic/${conversation.avatar}`} alt={conversation.username} />
                       <div className="messageUserInfo">
                         <div className="messageUserName">{conversation.username}</div>
+                        {conversation.msg && (
+                          <div className="messagePreview">
+                            {conversation.msg.length > 30 ? `${conversation.msg.slice(0, 30)}...` : conversation.msg}
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}
                 </div>
                 <div className="selectedMessages">
                   {selectedMessage == null ? <div className="nomessage">
-                    <div className="title">
-                      Servezy
-                    </div>
-                    <span>
-                      Select A Message
-                    </span>
+                    <div className="title">Servezy</div>
+                    <span>Select A Message</span>
                   </div> :
                     <Messages selectedMessage={selectedMessage} />
                   }
@@ -73,26 +83,16 @@ export default function Chat({ type }) {
               </>
               :
               <div className="zeroMessage">
-                {<div className="nomessage">
-                  <div className="title">
-                    Servezy
-                    Servezy
-                  </div>
-                  <span>
-                    You have no messages for now
-                  </span>
+                <div className="nomessage">
+                  <div className="title">Servezy</div>
+                  <span>You have no messages for now</span>
                 </div>
-                }
               </div>
             }
-
-
           </div>
-          {type == "freelancer" ? <FreelancerMenu active="chat" /> : <ClientMenu active="chat" />}
-
+          {type === "freelancer" ? <FreelancerMenu active="chat" /> : <ClientMenu active="chat" />}
         </div>
       </div>
     </>
-
   )
 }

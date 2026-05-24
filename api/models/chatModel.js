@@ -3,7 +3,7 @@ const { Schema } = require("mongoose");
 
 const ChatModel = new Schema(
   {
-    between: [Schema.Types.ObjectId],
+    between: { type: [Schema.Types.ObjectId], index: true },
   },
   { timestamps: true }
 );

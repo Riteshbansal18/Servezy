@@ -3,9 +3,10 @@ const { getServiceRating } = require("./TestimonialsController");
 const { findServiceById } = require("./ServicesController");
 const { findUserById } = require("./UserController");
 const { sendMessage } = require("./ChatController");
+const { sendOrderNotificationEmail } = require("../config/mailer");
 
 const findOrder = async (orderId) => {
-  const selectedOrder = Order.findById(orderId);
+  const selectedOrder = await Order.findById(orderId);
   return selectedOrder;
 };
 
@@ -84,11 +85,25 @@ const makeOrder = async (clientId, serviceId) => {
         return "You Already Have A Uncompleted Order For This Service";
       }
       const text = `Hello,I would like to order ${selectedService.title} service`;
-      sendMessage(clientId, selectedService.userId, text);
-      const createdOrder = Order.create({
+      await sendMessage(clientId, selectedService.userId, text);
+      const createdOrder = await Order.create({
         clientId: selectedClient._id,
         serviceId: selectedService._id,
       });
+      // Send email notification to freelancer
+      try {
+        const freelancer = await findUserById(selectedService.userId);
+        if (freelancer && freelancer.email) {
+          await sendOrderNotificationEmail(
+            freelancer.email,
+            freelancer.fullName || freelancer.username,
+            selectedClient.fullName || selectedClient.username,
+            selectedService.title
+          );
+        }
+      } catch (emailErr) {
+        console.log("Order email notification failed:", emailErr.message);
+      }
       return "Order Made Successfully";
     }
     return "Service Doesn't Exists";
@@ -110,7 +125,7 @@ const updateOrder = async (clientId, orderId, orderState) => {
       if (orderState != "Completed" && orderState != "Cancelled") {
         return "Order Status Unrecognized";
       }
-      const updatedOrder = Order.updateOne(
+      const updatedOrder = await Order.updateOne(
         { clientId, _id: orderId, status: "OnGoing" },
         {
           status: orderState,
@@ -123,10 +138,39 @@ const updateOrder = async (clientId, orderId, orderState) => {
   return "User doesn't exists";
 };
 
+const findFreelancerOrders = async (freelancerId) => {
+  const selectedFreelancer = await findUserById(freelancerId);
+  if (!selectedFreelancer) return "User Doesn't Exists";
+  if (selectedFreelancer.role !== "freelancer") return "You Don't Have Permission";
+
+  const serviceModel = require("../models/serviceModel");
+  const freelancerServices = await serviceModel.find({ userId: freelancerId });
+  const serviceIds = freelancerServices.map(s => s._id);
+
+  const orders = await Order.find({ serviceId: { $in: serviceIds } }).sort({ updatedAt: -1 });
+  let allOrdersInfo = [];
+  for (let order of orders) {
+    const serviceInfo = await findServiceById(order.serviceId.toString());
+    const clientInfo = await findUserById(order.clientId.toString());
+    const serviceRating = await getServiceRating(order.serviceId.toString());
+    const { password, otp, otpExpiry, ...safeClient } = clientInfo.toObject();
+    allOrdersInfo.push({
+      serviceInfo,
+      serviceRating,
+      clientInfo: safeClient,
+      status: order.status,
+      _id: order._id,
+      createdAt: order.createdAt,
+    });
+  }
+  return allOrdersInfo;
+};
+
 module.exports = {
   findClientOrder,
   findClientOrders,
   makeOrder,
   updateOrder,
   findOrder,
+  findFreelancerOrders,
 };

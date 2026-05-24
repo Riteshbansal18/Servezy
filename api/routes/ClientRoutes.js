@@ -44,9 +44,10 @@ route.get("/service/:idService", VerifyToken, async (req, res) => {
     const selectedService = await findServiceById(req.params.idService);
     if (selectedService) {
       const selectedServiceUser = await findUserById(selectedService.userId);
+      const { password, otp, otpExpiry, ...safeUser } = selectedServiceUser.toObject();
       const serviceInfo = {
         ...selectedService._doc,
-        userId: selectedServiceUser,
+        userId: safeUser,
       };
       return res.json({ selectedService: serviceInfo, status: 200 });
     }

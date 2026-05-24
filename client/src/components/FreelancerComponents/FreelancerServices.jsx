@@ -10,6 +10,8 @@ import { myServices } from "../../Redux/FreelancerSlice";
 import { toast } from 'react-toastify';
 import Loading from './../Loading';
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3001";
+
 export default function FreelancerServices() {
   const { token, avatar } = useSelector(state => state.user)
   const [loading, setLoading] = useState(true)
@@ -51,7 +53,7 @@ export default function FreelancerServices() {
                   <Slider images={service.images.split('|')} />
                 </div>
                 <div className="serviceHeader">
-                  <img src={avatar === 'no-image.png' ? noImage : `http://localhost:3001/ProfilePic/${avatar}`} alt="Service" />
+                  <img src={avatar === 'no-image.png' ? noImage : `${API_URL}/ProfilePic/${avatar}`} alt="Service" />
                   <span>{localStorage.getItem('userInfo') && JSON.parse(localStorage.getItem('userInfo')).username}</span>
                 </div>
                 <div className="serviceBody">

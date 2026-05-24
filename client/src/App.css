@@ -1,10 +1,27 @@
 :root {
-  --color-orange: #feab5e;
-  --color-light-orange: #fcbf87;
-  --color-grey: #707070;
-  --color-border-orange: #ffead7;
-  --color-green: #198754;
-  --color-red: #dc3545;
+  --color-orange: #10B981;
+  --color-light-orange: #34D399;
+  --color-grey: #6B7280;
+  --color-border-orange: #D1FAE5;
+  --color-green: #059669;
+  --color-red: #EF4444;
+  --color-dark: #111827;
+  --color-bg: #F9FAFB;
+  --color-white: #ffffff;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 16px rgba(16,185,129,0.12), 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 40px rgba(16,185,129,0.15), 0 4px 16px rgba(0,0,0,0.08);
+  --radius: 14px;
+  --radius-sm: 8px;
+  --transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background-color: var(--color-bg);
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  color: var(--color-dark);
 }
 
 .container {
@@ -12,6 +29,22 @@
   padding-left: calc(1.5rem * 0.5);
   margin-right: auto;
   margin-left: auto;
+}
+/* Dashboard layout — section + menu side by side */
+.FreelancerDashboard .container,
+.ClientDashboard .container,
+.FreelancerServices .container,
+.FreelancerCreateService .container,
+.FreelancerManageServices .container,
+.FreelancerUpdateService .container,
+.ClientServices .container,
+.ClientOrders .container,
+.Chat .container,
+.Profile .container,
+.ServiceDetail .container {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
 }
 @media (min-width: 576px) {
   .container {
@@ -45,9 +78,10 @@
   position: fixed;
   width: 100%;
   height: 100vh;
-  z-index: 10;
+  z-index: 1000;
   top: 0px;
-  background-color: white;
+  background-color: rgba(255,255,255,0.92);
+  backdrop-filter: blur(4px);
   left: 0px;
   display: flex;
   justify-content: center;
@@ -66,67 +100,87 @@
   width: 25px;
   height: 3px;
   margin: 5px auto;
-  transition: all 0.3s ease-in-out;
+  transition: var(--transition);
   background-color: white;
+  border-radius: 3px;
 }
 .Nav {
   width: 100%;
-  background-color: var(--color-orange);
+  background: linear-gradient(135deg, var(--color-orange) 0%, var(--color-green) 100%);
   position: sticky;
   top: 0px;
-  z-index: 2;
+  z-index: 100;
+  box-shadow: 0 2px 20px rgba(16,185,129,0.3);
 }
 header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 105px;
+  height: 80px;
 }
 .logo a {
   text-decoration: none;
   color: white;
-  font-size: 35px;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }
 .menu-logo {
   display: none;
 }
 nav {
-  width: 652px;
+  width: 620px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 nav button {
-  border-radius: 30px;
+  border-radius: 50px;
   background-color: white;
-  padding: 8px 42px;
+  padding: 10px 32px;
   border: none;
   outline: none;
   cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  transition: var(--transition);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+nav button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 nav img {
-  width: 55px;
-  height: 55px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   cursor: pointer;
+  border: 2px solid rgba(255,255,255,0.6);
+  transition: var(--transition);
+  object-fit: cover;
+}
+nav img:hover {
+  border-color: white;
+  transform: scale(1.05);
 }
 nav .menu {
   position: relative;
 }
 nav .menu .dropdown {
-  background-color: var(--color-orange);
-  border: 1px solid white;
+  background: white;
+  border: none;
   position: absolute;
-  bottom: -116px;
-  z-index: 1;
-  width: 205%;
-  right: -9px;
+  top: calc(100% + 12px);
+  z-index: 200;
+  width: 180px;
+  right: 0;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  border-radius: 10px;
+  padding: 8px;
+  border-radius: var(--radius);
   display: none;
-  gap: 5px;
+  gap: 4px;
+  box-shadow: var(--shadow-lg);
 }
 nav .menu .dropdown.active {
   display: flex;
@@ -135,68 +189,51 @@ nav .menu .dropdown.active {
 nav .menu .dropdown .link {
   position: relative;
   cursor: pointer;
-  font-size: 20px;
-  font-weight: 600;
-  color: white;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-dark);
   width: 100%;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
 }
 nav .menu .dropdown .link:hover {
-  color: black;
+  background-color: var(--color-border-orange);
+  color: var(--color-green);
 }
 nav .menu .dropdown .link:nth-child(1):before {
-  content: "";
-  position: absolute;
-  top: -40px;
-  right: 5px;
-  width: 20px;
-  height: 20px;
-  background-color: white;
-  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  display: none;
 }
 nav a {
-  font-size: 20px;
+  font-size: 15px;
+  font-weight: 500;
   text-decoration: none;
+  color: rgba(255,255,255,0.9);
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+nav a:hover {
   color: white;
-  padding: 12px 20px;
-  border-radius: 10px;
+  background-color: rgba(255,255,255,0.15);
 }
 nav button a {
   color: var(--color-orange);
 }
 
 @media (max-width: 991px) {
-  .hamburger {
-    display: block;
-    z-index: 3;
-  }
-
-  .hamburger.active .bar:nth-child(2) {
-    opacity: 0;
-  }
-
-  .hamburger.active .bar:nth-child(1) {
-    transform: translateY(8px) rotate(45deg);
-    background-color: white;
-  }
-
-  .hamburger.active .bar:nth-child(3) {
-    transform: translateY(-8px) rotate(-45deg);
-    background-color: white;
-  }
-  nav {
-    display: none;
-  }
-  nav a {
-    display: none;
-  }
-  nav button {
-    display: none;
-  }
+  .hamburger { display: block; z-index: 300; }
+  .hamburger.active .bar:nth-child(2) { opacity: 0; }
+  .hamburger.active .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+  .hamburger.active .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+  nav { display: none; }
+  nav a { display: none; }
+  nav button { display: none; }
   nav.active {
-    z-index: 2;
+    z-index: 200;
     width: 100%;
     height: 100%;
-    background-color: var(--color-orange);
+    background: linear-gradient(135deg, var(--color-orange) 0%, var(--color-green) 100%);
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -204,50 +241,23 @@ nav button a {
     top: 0;
     left: 0;
   }
-  nav.active a {
-    display: block;
-  }
-  nav.active button {
-    display: block;
-  }
-  nav .menu-logo {
-    display: none;
-  }
-  nav.active .menu-logo {
-    display: block;
-    font-size: 35px;
-    color: white;
-  }
+  nav.active a { display: block; }
+  nav.active button { display: block; }
+  nav .menu-logo { display: none; }
+  nav.active .menu-logo { display: block; font-size: 30px; color: white; font-weight: 800; }
   nav .menu .dropdown {
     background-color: white;
-    border: 1px solid var(--color-orange);
+    border: none;
     position: absolute;
-    bottom: -25px;
+    top: calc(100% + 8px);
     z-index: 1;
-    width: 188%;
-    height: 64px;
-    right: 67px;
+    width: 160px;
+    right: 0;
+    box-shadow: var(--shadow-md);
   }
-  nav .menu .dropdown .link {
-    position: relative;
-    cursor: pointer;
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--color-orange);
-  }
-  nav .menu .dropdown .link:nth-child(1):before {
-    content: "";
-    position: absolute;
-    top: 19px;
-    right: -39px;
-    width: 20px;
-    height: 20px;
-    background-color: white;
-    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-    transform: rotate(90deg);
-  }
+  nav .menu .dropdown .link { color: var(--color-dark); }
+  nav .menu .dropdown .link:nth-child(1):before { display: none; }
 }
-
 /* End Nav Section */
 
 /* Start Home Section */
@@ -256,310 +266,225 @@ nav button a {
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  padding: 60px 0 40px;
 }
-.Home .description {
-  display: flex;
-  flex-direction: column;
-}
+.Home .description { display: flex; flex-direction: column; }
 .Home .description .hero-description {
-  font-size: 220%;
-  width: 396px;
-  margin-bottom: 16px;
+  font-size: 52px;
+  font-weight: 900;
+  width: 480px;
+  margin-bottom: 20px;
+  color: var(--color-dark);
+  letter-spacing: -2px;
+  line-height: 1.1;
 }
+.Home .description .hero-description span { color: var(--color-orange); }
 .Home .description p {
-  width: 396px;
-  font-size: 20px;
+  width: 420px;
+  font-size: 18px;
+  color: var(--color-grey);
+  line-height: 1.7;
 }
 .Home .description button {
   cursor: pointer;
   outline: none;
   border: none;
-  border-radius: 30px;
-  background-color: var(--color-orange);
+  border-radius: 50px;
+  background: linear-gradient(135deg, var(--color-orange), var(--color-green));
   color: white;
-  padding: 10px 55px;
-  font-size: 20px;
-  margin-top: 25px;
+  padding: 16px 48px;
+  font-size: 17px;
+  font-weight: 700;
+  margin-top: 32px;
+  align-self: flex-start;
+  transition: var(--transition);
+  box-shadow: 0 8px 24px rgba(16,185,129,0.4);
 }
-.Home .hero {
-  width: 58%;
-  position: relative;
+.Home .description button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(16,185,129,0.5);
 }
-
-.Home .hero-img {
-  width: 100%;
-}
-.Home .blob-img {
-  position: absolute;
-  width: 120%;
-  top: 20px;
-  left: -60px;
-  z-index: -1;
-}
-
-.Home section {
-  display: flex;
-  flex-direction: column;
-}
-.Home .services {
-  margin-top: 100px;
-  display: flex;
-  flex-direction: column;
-}
+.Home .hero { width: 52%; position: relative; }
+.Home .hero-img { width: 100%; filter: drop-shadow(0 20px 40px rgba(16,185,129,0.2)); }
+.Home .blob-img { position: absolute; width: 120%; top: 20px; left: -60px; z-index: -1; opacity: 0.6; }
+.Home section { display: flex; flex-direction: column; }
+.Home .services { margin-top: 80px; display: flex; flex-direction: column; }
 .Home .custom-headline {
-  margin-top: 50px;
-  font-weight: bold;
+  margin-top: 40px;
+  font-weight: 900;
   color: var(--color-orange);
-  font-size: 40px;
+  font-size: 36px;
   text-align: center;
+  letter-spacing: -0.5px;
 }
-.Home .service {
-  margin-top: 50px;
-  display: flex;
-  flex-direction: column;
-}
+.Home .service { margin-top: 60px; display: flex; flex-direction: column; }
 .Home .service-headline {
   text-align: center;
-  font-size: 35px;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--color-dark);
+  letter-spacing: -0.5px;
 }
 .Home .service-description {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  margin-top: 35px;
+  margin-top: 32px;
+  gap: 24px;
 }
-.Home .reverse {
-  flex-direction: row-reverse;
-}
-.Home .service-description img {
-  width: 484px;
-}
+.Home .reverse { flex-direction: row-reverse; }
+.Home .service-description img { width: 440px; filter: drop-shadow(0 10px 30px rgba(16,185,129,0.15)); }
 .Home .service-info {
   color: var(--color-grey);
-  width: 400px;
-  text-align: center;
-  font-size: 20px;
+  width: 420px;
+  font-size: 17px;
+  line-height: 1.8;
 }
 .Home .about-us-description {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  margin-top: 35px;
+  margin-top: 32px;
+  gap: 24px;
 }
-.Home .about-us img {
-  width: 484px;
-}
-.Home .about-us-info {
-  color: var(--color-grey);
-  width: 450px;
-  font-size: 20px;
-}
-
+.Home .about-us img { width: 440px; filter: drop-shadow(0 10px 30px rgba(16,185,129,0.15)); }
+.Home .about-us-info { color: var(--color-grey); width: 460px; font-size: 17px; line-height: 1.8; }
 .Home .contact-us-description {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  margin-top: 35px;
+  margin-top: 32px;
+  gap: 24px;
 }
-.Home .contact-us img {
-  width: 484px;
-}
+.Home .contact-us img { width: 440px; filter: drop-shadow(0 10px 30px rgba(16,185,129,0.15)); }
 .Home .contact-us form {
-  width: 450px;
-  text-align: center;
+  width: 460px;
+  background: white;
+  padding: 36px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
 }
-.Home .contact-us .form-section {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
+.Home .contact-us .form-section { display: flex; flex-direction: column; width: 100%; margin-bottom: 16px; }
 .Home .contact-us label {
-  font-weight: bold;
+  font-weight: 600;
   display: inline-block;
-  color: var(--color-orange);
+  color: var(--color-grey);
   width: 100%;
   text-align: left;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 .Home .contact-us input {
-  color: var(--color-orange);
   outline: none;
-  width: 90%;
-  padding: 17px 20px;
-  background-color: var(--color-orange);
-  border: 2px solid var(--color-light-orange);
-  color: white;
-  font-size: 14px;
-  border-radius: 10px;
-  margin-bottom: 25px;
+  width: 100%;
+  padding: 13px 16px;
+  background: var(--color-bg);
+  border: 2px solid #E5E7EB;
+  color: var(--color-dark);
+  font-size: 15px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+.Home .contact-us input:focus {
+  border-color: var(--color-orange);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(16,185,129,0.1);
 }
 .Home .contact-us input::placeholder,
-.Home .contact-us textarea::placeholder {
-  color: white;
-}
-.Home .contact-us input:focus::placeholder,
-.Home .contact-us textarea:focus::placeholder {
-  opacity: 0;
-  transition: 0.3s;
-}
+.Home .contact-us textarea::placeholder { color: #9CA3AF; }
 .Home .contact-us textarea {
-  color: var(--color-orange);
   outline: none;
-  max-width: 90%;
-  min-height: 18px;
-  padding: 17px 20px;
-  background-color: var(--color-orange);
-  border: 1px solid var(--color-light-orange);
-  color: white;
-  font-size: 14px;
-  border-radius: 10px;
+  width: 100%;
+  min-height: 100px;
+  padding: 13px 16px;
+  background: var(--color-bg);
+  border: 2px solid #E5E7EB;
+  color: var(--color-dark);
+  font-size: 15px;
+  border-radius: var(--radius-sm);
+  resize: vertical;
+  transition: var(--transition);
+  line-height: 1.6;
+}
+.Home .contact-us textarea:focus {
+  border-color: var(--color-orange);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(16,185,129,0.1);
 }
 .Home .contact-us button {
-  margin-top: 7px;
   cursor: pointer;
   outline: none;
   border: none;
-  border-radius: 30px;
-  background-color: var(--color-orange);
+  border-radius: 50px;
+  background: linear-gradient(135deg, var(--color-orange), var(--color-green));
   color: white;
-  padding: 10px 55px;
-  font-size: 16px;
-  margin-top: 25px;
-  align-self: center;
+  padding: 14px 40px;
+  font-size: 15px;
+  font-weight: 700;
+  margin-top: 8px;
+  width: 100%;
+  transition: var(--transition);
+  box-shadow: 0 4px 15px rgba(16,185,129,0.4);
 }
-
+.Home .contact-us button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(16,185,129,0.5);
+}
+.Home .contact-us button:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
 .Home footer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: var(--color-orange);
-  margin-top: 50px;
-  padding-bottom: 20px;
+  background: linear-gradient(135deg, var(--color-orange), var(--color-green));
+  margin-top: 80px;
+  padding-bottom: 28px;
+  border-radius: 24px 24px 0 0;
 }
-.Home footer .footer-head {
-  color: white;
-  font-size: 35px;
-  text-align: center;
-  margin: 36px;
-}
-.Home footer .footer-body {
-  text-align: center;
-  color: white;
-  width: 563px;
-  margin-bottom: 78px;
-  font-size: 20px;
-}
-.Home footer .footer-footer {
-  display: flex;
-  width: 70%;
-  color: white;
-  justify-content: space-between;
-  font-size: 20px;
-}
-.Home footer .socials {
-  display: flex;
-  gap: 17px;
-}
-.Home footer .socials svg {
-  width: 35px;
-  height: 35px;
-  fill: white;
-}
-@media (max-width: 1100px) {
-  .Home main {
-    justify-content: center;
-    flex-wrap: wrap-reverse;
-  }
-}
+.Home footer .footer-head { color: white; font-size: 32px; font-weight: 800; text-align: center; margin: 36px; letter-spacing: -0.5px; }
+.Home footer .footer-body { text-align: center; color: rgba(255,255,255,0.85); width: 560px; margin-bottom: 60px; font-size: 17px; line-height: 1.7; }
+.Home footer .footer-footer { display: flex; width: 70%; color: white; justify-content: space-between; font-size: 15px; align-items: center; }
+.Home footer .socials { display: flex; gap: 16px; }
+.Home footer .socials svg { width: 28px; height: 28px; fill: white; cursor: pointer; transition: var(--transition); }
+.Home footer .socials svg:hover { transform: scale(1.2); opacity: 0.8; }
+@media (max-width: 1100px) { .Home main { justify-content: center; flex-wrap: wrap-reverse; gap: 40px; } }
 @media (max-width: 1000px) {
-  .Home .service-description {
-    justify-content: center;
-    text-align: center;
-  }
-  .Home .service-info {
-    margin-top: 15px;
-  }
-  .Home .service-description img {
-    width: 400px;
-  }
-  .Home .about-us-description {
-    justify-content: center;
-    text-align: center;
-  }
-  .Home .about-us-info {
-    margin-top: 15px;
-    width: 354px;
-  }
-  .Home .about-us-description img {
-    width: 400px;
-  }
-  .Home .contact-us-description {
-    justify-content: center;
-    text-align: center;
-  }
-  .Home .contact-us-description img {
-    width: 400px;
-  }
-  .Home .contact-us-description {
-    justify-content: center;
-    text-align: center;
-  }
+  .Home .service-description, .Home .about-us-description, .Home .contact-us-description { justify-content: center; text-align: center; }
+  .Home .service-info, .Home .about-us-info { margin-top: 15px; width: 100%; max-width: 500px; }
+  .Home .service-description img, .Home .about-us img { width: 380px; }
 }
 @media (max-width: 992px) {
-  .Home .description {
-    margin-top: 50px;
-    text-align: center;
-  }
-  .Home .blob-img {
-    left: -20px;
-  }
+  .Home .description { margin-top: 40px; text-align: center; align-items: center; }
+  .Home .description .hero-description { width: 100%; font-size: 40px; }
+  .Home .description p { width: 100%; max-width: 500px; }
+  .Home .blob-img { left: -20px; }
 }
-@media (max-width: 790px) {
-  .Home footer .footer-body {
-    width: 90%;
-  }
+@media (max-width: 790px) { .Home footer .footer-body { width: 90%; } }
+@media (max-width: 600px) {
+  .Home footer .footer-footer { flex-direction: column; gap: 16px; text-align: center; }
+  .Home .contact-us form { width: 100%; padding: 24px 20px; }
 }
 @media (max-width: 500px) {
-  .Home .description .hero-description {
-    font-size: 220%;
-    width: 100%;
-    margin-bottom: 16px;
-  }
-  .Home .description p {
-    width: auto;
-    padding-right: 15px;
-    padding-left: 15px;
-    font-size: 20px;
-  }
-  .Home .contact-us form {
-    width: 330px;
-    text-align: center;
-  }
-  .Home .contact-us input {
-    width: 88%;
-  }
-  .Home .service-description img,
-  .Home .about-us-description img,
-  .Home .contact-us-description img {
-    width: 100%;
-  }
+  .Home .description .hero-description { font-size: 32px; }
+  .Home .service-description img, .Home .about-us-description img, .Home .contact-us-description img { width: 100%; }
 }
-
 /* End Home Section */
 
 /* Start Special footer Section */
 .specialfooter {
-  border-radius: 30px 30px 0px 0px;
+  border-radius: 20px 20px 0px 0px;
   width: 100%;
-  background-color: var(--color-orange);
+  background: linear-gradient(135deg, var(--color-orange), var(--color-green));
   display: flex;
   justify-content: center;
+  box-shadow: 0 -4px 20px rgba(16,185,129,0.2);
 }
 .specialfooter footer {
-  width: 70%;
+  width: 80%;
   text-align: center;
   display: flex;
   flex-wrap: wrap;
@@ -567,1310 +492,1367 @@ nav button a {
   justify-content: space-between;
   gap: 20px;
   align-items: center;
-  min-height: 58px;
+  min-height: 64px;
+  padding: 12px 0;
 }
 .specialfooter .socials {
   min-width: 20%;
   display: flex;
   justify-content: space-around;
+  gap: 12px;
 }
 .specialfooter .socials svg {
-  width: 25px;
-  height: 25px;
+  width: 22px;
+  height: 22px;
   fill: white;
+  transition: var(--transition);
+  cursor: pointer;
 }
+.specialfooter .socials svg:hover { transform: scale(1.2); opacity: 0.8; }
 @media (max-width: 712px) {
-  .specialfooter footer {
-    justify-content: center;
-    padding: 10px 0px;
-  }
-  .specialfooter .socials {
-    gap: 5px;
-  }
+  .specialfooter footer { justify-content: center; padding: 14px 0; }
 }
 /* End Special footer Section */
 
 /* Start Login Section */
+.Login {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+  min-height: calc(100vh - 80px);
+}
 .Login img {
-  width: 500px;
+  width: 420px;
+  filter: drop-shadow(0 20px 40px rgba(16,185,129,0.15));
 }
 .Login section {
-  min-height: calc(100vh - 173px);
+  min-height: calc(100vh - 80px);
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
+  padding: 40px 0;
 }
 .Login .loginHeader {
-  margin-bottom: 60px;
+  margin-bottom: 40px;
 }
 .Login section .loginForm {
-  width: 500px;
+  width: 460px;
   display: flex;
   flex-direction: column;
+  background: white;
+  padding: 48px 40px;
+  border-radius: 24px;
+  box-shadow: var(--shadow-lg);
 }
 .Login section .loginForm .loginHeader {
+  color: var(--color-dark);
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+.Login section .loginForm .loginHeader span {
   color: var(--color-orange);
-  font-size: 50px;
 }
 .Login section .loginForm .formSection {
-  margin-bottom: 33px;
+  margin-bottom: 20px;
 }
 .Login section form {
   text-align: center;
 }
 .Login form label {
   display: inline-block;
-  color: var(--color-orange);
-  font-weight: bold;
+  color: var(--color-grey);
+  font-weight: 600;
   width: 100%;
   text-align: left;
-  font-size: 18px;
-  margin-bottom: 8px;
+  font-size: 14px;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 .Login input {
-  color: var(--color-orange);
   outline: none;
-  width: 90%;
-  padding: 17px 20px;
-  background-color: var(--color-orange);
-  border: 2px solid var(--color-light-orange);
-  color: white;
-  font-size: 20px;
-  border-radius: 10px;
-  margin-bottom: 25px;
+  width: 100%;
+  padding: 14px 18px;
+  background-color: var(--color-bg);
+  border: 2px solid #E5E7EB;
+  color: var(--color-dark);
+  font-size: 16px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 20px;
+  transition: var(--transition);
 }
-.Login input:focus::placeholder {
-  opacity: 0;
-  transition: 0.3s;
+.Login input:focus {
+  border-color: var(--color-orange);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(16,185,129,0.1);
 }
-.Login input::placeholder {
-  color: white;
-}
+.Login input:focus::placeholder { opacity: 0; transition: 0.3s; }
+.Login input::placeholder { color: #9CA3AF; }
 .Login section button {
-  margin-top: 31px;
+  margin-top: 8px;
   cursor: pointer;
   outline: none;
   border: none;
-  border-radius: 30px;
-  background-color: var(--color-orange);
+  border-radius: 50px;
+  background: linear-gradient(135deg, var(--color-orange), var(--color-green));
   color: white;
-  width: 130px;
-  height: 45px;
-  font-size: 20px;
+  width: 100%;
+  height: 52px;
+  font-size: 16px;
+  font-weight: 700;
+  transition: var(--transition);
+  box-shadow: 0 4px 15px rgba(16,185,129,0.4);
+}
+.Login section button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(16,185,129,0.5);
 }
 .Login .signupSection {
   width: 100%;
   text-align: center;
+  margin-top: 20px;
 }
 .Login section span {
-  font-size: 20px;
+  font-size: 15px;
+  color: var(--color-grey);
+}
+.Login .signupSection a button {
+  background: transparent;
   color: var(--color-orange);
+  box-shadow: none;
+  width: auto;
+  height: auto;
+  padding: 4px 12px;
+  font-weight: 600;
+  font-size: 15px;
+}
+.Login .signupSection a button:hover {
+  background: var(--color-border-orange);
+  transform: none;
+  box-shadow: none;
 }
 @media (max-width: 1200px) {
-  .Login img {
-    width: 400px;
-  }
-  .Login section .loginForm {
-    width: 400px;
-  }
+  .Login img { width: 340px; }
+  .Login section .loginForm { width: 420px; }
 }
 @media (max-width: 992px) {
-  .Login section {
-    justify-content: center;
-  }
-  .Login section .loginHeader {
-    text-align: center;
-    width: 100%;
-  }
-}
-@media (max-width: 500px) {
-  .Login section {
-    width: 90%;
-  }
-  .Login section {
-    width: 90%;
-  }
+  .Login section { justify-content: center; }
+  .Login section .loginHeader { text-align: center; width: 100%; }
+  .Login img { display: none; }
+  .Login section .loginForm { width: 100%; max-width: 460px; }
 }
 /* End Login Section */
 
 /* Start Error Section */
-.Error img {
-  width: 500px;
+.Error {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
 }
+.Error img { width: 420px; filter: drop-shadow(0 20px 40px rgba(16,185,129,0.15)); }
 .Error section {
-  min-height: calc(100vh - 213px);
+  min-height: calc(100vh - 80px);
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 50px;
+  padding: 40px 0;
 }
-.Error .errorDescription {
-  display: flex;
-  flex-direction: column;
-  max-width: 700px;
-}
+.Error .errorDescription { display: flex; flex-direction: column; max-width: 600px; }
 .Error .errorDescription .errorhead {
-  font-size: 70px;
-  margin-bottom: 30px;
+  font-size: 72px;
+  font-weight: 900;
+  margin-bottom: 16px;
+  letter-spacing: -3px;
+  color: var(--color-dark);
 }
-.Error .errorDescription .errorhead span {
-  color: var(--color-orange);
-}
-.Error .errorDescription .errorbody {
-  color: var(--color-grey);
-  font-size: 30px;
-}
+.Error .errorDescription .errorhead span { color: var(--color-orange); }
+.Error .errorDescription .errorbody { color: var(--color-grey); font-size: 20px; line-height: 1.6; }
 .Error .errorDescription button {
-  margin-top: 7px;
   cursor: pointer;
   outline: none;
   border: none;
-  border-radius: 30px;
-  background-color: var(--color-orange);
+  border-radius: 50px;
+  background: linear-gradient(135deg, var(--color-orange), var(--color-green));
   color: white;
-  padding: 10px 55px;
+  padding: 14px 40px;
   font-size: 16px;
-  margin-top: 25px;
+  font-weight: 700;
+  margin-top: 32px;
   align-self: flex-start;
+  transition: var(--transition);
+  box-shadow: 0 4px 15px rgba(16,185,129,0.4);
 }
-@media (max-width: 1400px) {
-  .Error .errorDescription .errorhead {
-    font-size: 60px;
-  }
-  .Error .errorDescription .errorbody {
-    font-size: 20px;
-  }
-}
-@media (max-width: 1200px) {
-  .Error img {
-    width: 350px;
-  }
-}
+.Error .errorDescription button:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(16,185,129,0.5); }
+@media (max-width: 1200px) { .Error img { width: 340px; } }
 @media (max-width: 992px) {
-  .Error section {
-    justify-content: center;
-  }
-  .Error section .errorhead {
-    text-align: center;
-  }
-  .Error section .errorbody {
-    text-align: center;
-  }
-  .Error .errorDescription button {
-    align-self: center;
-  }
+  .Error section { justify-content: center; }
+  .Error section .errorhead, .Error section .errorbody { text-align: center; }
+  .Error .errorDescription button { align-self: center; }
+  .Error img { display: none; }
 }
 /* End Error Section */
 
 /* Start Sign Up Section */
-.Signup img {
-  width: 500px;
+.Signup {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
 }
+.Signup img { width: 420px; filter: drop-shadow(0 20px 40px rgba(16,185,129,0.15)); }
 .Signup section {
-  min-height: calc(100vh - 173px);
+  min-height: calc(100vh - 80px);
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
+  padding: 40px 0;
 }
-.Signup .signupHeader {
-  margin-bottom: 60px;
-}
+.Signup .signupHeader { margin-bottom: 32px; }
 .Signup section .signupForm {
-  width: 630px;
+  width: 640px;
   display: flex;
   flex-direction: column;
+  background: white;
+  padding: 40px 36px;
+  border-radius: 24px;
+  box-shadow: var(--shadow-lg);
 }
 .Signup section .signupForm .signupHeader {
-  color: var(--color-orange);
-  font-size: 50px;
+  color: var(--color-dark);
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }
 .Signup section .inputs {
   text-align: center;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  gap: 0 20px;
 }
-
-.Signup section .signupForm .formsplitsections {
-  width: 250px;
-}
-.Signup section .signupForm .formSection {
-  margin-bottom: 250px;
-}
+.Signup section .signupForm .formsplitsections { width: 270px; }
 .Signup form label {
   display: inline-block;
-  color: var(--color-orange);
-  font-weight: bold;
+  color: var(--color-grey);
+  font-weight: 600;
   width: 100%;
   text-align: left;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
-
 .Signup input {
-  color: var(--color-orange);
   outline: none;
   width: 100%;
-  padding: 17px 20px;
-  background-color: var(--color-orange);
-  border: 2px solid var(--color-light-orange);
-  color: white;
-  font-size: 18px;
-  border-radius: 10px;
-  margin-bottom: 25px;
+  padding: 13px 16px;
+  background-color: var(--color-bg);
+  border: 2px solid #E5E7EB;
+  color: var(--color-dark);
+  font-size: 15px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+  transition: var(--transition);
 }
-.Signup input:focus::placeholder {
-  opacity: 0;
-  transition: 0.3s;
+.Signup input:focus {
+  border-color: var(--color-orange);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(16,185,129,0.1);
 }
-.Signup input::placeholder {
-  color: white;
-}
-.Signup form {
-  display: flex;
-  flex-direction: column;
-}
+.Signup input:focus::placeholder { opacity: 0; transition: 0.3s; }
+.Signup input::placeholder { color: #9CA3AF; }
+.Signup form { display: flex; flex-direction: column; }
 .Signup select {
-  border: 2px solid var(--color-light-orange);
-  font-size: 16px;
-  padding: 16px 20px;
+  border: 2px solid #E5E7EB;
+  font-size: 15px;
+  padding: 13px 16px;
   outline: none;
-  width: 116%;
-  border-radius: 10px;
-  margin-bottom: 25px;
-  background-color: var(--color-orange);
-  color: white;
-  border-right: 21px solid var(--color-orange);
+  width: 100%;
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+  background-color: var(--color-bg);
+  color: var(--color-dark);
+  transition: var(--transition);
+  cursor: pointer;
+}
+.Signup select:focus {
+  border-color: var(--color-orange);
+  box-shadow: 0 0 0 4px rgba(16,185,129,0.1);
 }
 .Signup section button {
   cursor: pointer;
   outline: none;
   border: none;
-  border-radius: 30px;
-  background-color: var(--color-orange);
+  border-radius: 50px;
+  background: linear-gradient(135deg, var(--color-orange), var(--color-green));
   color: white;
-  width: 115px;
-  height: 40px;
-  font-size: 18px;
+  padding: 14px 40px;
+  font-size: 16px;
+  font-weight: 700;
   align-self: center;
+  margin-top: 8px;
+  transition: var(--transition);
+  box-shadow: 0 4px 15px rgba(16,185,129,0.4);
+  min-width: 160px;
+}
+.Signup section button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(16,185,129,0.5);
 }
 .Signup .signupSection {
-  margin-top: 31px;
+  margin-top: 20px;
   width: 100%;
   text-align: center;
 }
 .Signup section span {
-  font-size: 20px;
-  margin-right: 62px;
+  font-size: 15px;
+  color: var(--color-grey);
+  margin-right: 8px;
+}
+.Signup .signupSection a button {
+  background: transparent;
   color: var(--color-orange);
+  box-shadow: none;
+  padding: 4px 12px;
+  font-weight: 600;
+  font-size: 15px;
+  min-width: auto;
+}
+.Signup .signupSection a button:hover {
+  background: var(--color-border-orange);
+  transform: none;
+  box-shadow: none;
 }
 .Signup .image {
   cursor: pointer;
-  color: white;
-  background-color: var(--color-orange);
-  border: 2px solid var(--color-light-orange);
+  color: var(--color-orange);
+  background-color: var(--color-border-orange);
+  border: 2px dashed var(--color-light-orange);
   width: 100%;
-  padding: 17px 20px;
-  font-size: 18px;
-  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 15px;
+  border-radius: var(--radius-sm);
   text-align: center;
-  font-weight: 500;
-  margin-top: 29px;
+  font-weight: 600;
+  margin-top: 4px;
+  transition: var(--transition);
 }
-.Signup #image {
-  display: none;
+.Signup .image:hover {
+  background-color: #A7F3D0;
+  border-color: var(--color-orange);
 }
+.Signup #image { display: none; }
+.Signup .form-section { margin-bottom: 4px; }
 @media (max-width: 1250px) {
-  .Signup section {
-    flex-direction: column;
-  }
-  .Signup section .signupHeader {
-    text-align: center;
-  }
-  .Signup section .inputs {
-    align-items: center;
-    flex-direction: column;
-  }
-  .Signup select {
-    width: 107%;
-  }
-  .Signup section .signupForm .formsplitsections {
-    width: 630px;
-  }
+  .Signup section { flex-direction: column; }
+  .Signup section .signupHeader { text-align: center; }
+  .Signup section .inputs { align-items: center; flex-direction: column; }
+  .Signup section .signupForm .formsplitsections { width: 100%; }
+  .Signup img { display: none; }
+  .Signup section .signupForm { width: 100%; max-width: 600px; }
 }
-@media (max-width: 770px) {
-  .Signup section {
-    width: 90%;
-  }
-  .Signup section img {
-    width: 100%;
-  }
-  .Signup section .signupForm form {
-    align-items: center;
-  }
-  .Signup section .signupForm .formsplitsections {
-    width: 80%;
-  }
-  .Signup section .signupForm {
-    width: 100%;
-  }
-  .Signup .signupSection {
-    text-align: center;
-  }
-  .Signup select {
-    width: 118%;
-  }
-}
-@media (max-width: 425px) {
-  .Signup section span {
-    margin-right: 0px;
-  }
+@media (max-width: 500px) {
+  .Signup section span { margin-right: 0px; }
+  .Signup section .signupForm { padding: 28px 20px; }
 }
 /* End Sign Up Section */
 
 /* Start Dahsboard Freelancer Home*/
-.FreelancerDashboard .section {
-  min-height: calc(100vh - 173px);
+.FreelancerDashboard .section,
+.ClientDashboard .section {
+  min-height: calc(100vh - 80px);
+  padding: 32px 0;
 }
-.FreelancerDashboard .header {
-  font-size: 40px;
-  margin-top: 20px;
+.FreelancerDashboard .header,
+.ClientDashboard .header {
+  font-size: 32px;
+  font-weight: 800;
+  margin-top: 8px;
+  color: var(--color-dark);
+  letter-spacing: -0.5px;
 }
-.FreelancerDashboard .stats {
-  margin-top: 31px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: space-between;
+.FreelancerDashboard .stats,
+.ClientDashboard .stats {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
 }
-.FreelancerDashboard .serverStopped {
+.FreelancerDashboard .serverStopped,
+.ClientDashboard .serverStopped {
   color: var(--color-orange);
-  font-size: 50px;
+  font-size: 40px;
   text-align: center;
   font-weight: 700;
-  height: 78vh;
+  height: 60vh;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
 }
-.FreelancerDashboard .stats .card {
-  padding: 39px 20px;
-  width: calc(1320px / 5);
+.FreelancerDashboard .stats .card,
+.ClientDashboard .stats .card {
+  padding: 28px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: rgba(21, 34, 50, 0.26) 10px 10px 20px;
-  border-radius: 10px;
+  background: white;
+  box-shadow: var(--shadow-md);
+  border-radius: var(--radius);
+  border: 1px solid rgba(16,185,129,0.08);
+  transition: var(--transition);
 }
-.FreelancerDashboard .stats .card .info {
+.FreelancerDashboard .stats .card:hover,
+.ClientDashboard .stats .card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+.FreelancerDashboard .stats .card .info,
+.ClientDashboard .stats .card .info {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 8px;
 }
-.FreelancerDashboard .stats .card .info .title {
-  font-size: 16px;
+.FreelancerDashboard .stats .card .info .title,
+.ClientDashboard .stats .card .info .title {
+  font-size: 13px;
   color: var(--color-grey);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
-.FreelancerDashboard .stats .card .info .body-stat {
-  font-size: 28px;
+.FreelancerDashboard .stats .card .info .body-stat,
+.ClientDashboard .stats .card .info .body-stat {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--color-dark);
+  letter-spacing: -1px;
 }
-.FreelancerDashboard .stats .card .logo {
-  width: 62px;
-  height: 62px;
-  border-radius: 50%;
-  background-color: var(--color-border-orange);
+.FreelancerDashboard .stats .card .logo,
+.ClientDashboard .stats .card .logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--color-border-orange), #A7F3D0);
   display: flex;
   align-items: center;
   justify-content: center;
 }
-@media (max-width: 1400px) {
-  .FreelancerDashboard .stats {
-    gap: 60px;
-  }
-  .FreelancerDashboard .stats .card {
-    width: 500px;
-  }
+.FreelancerDashboard .testimonials,
+.ClientDashboard .testimonials {
+  margin-top: 40px;
 }
-@media (max-width: 1200px) {
-  .FreelancerDashboard .stats {
-    gap: 25px;
-  }
-  .FreelancerDashboard .stats .card {
-    width: 420px;
-  }
+.FreelancerDashboard .testimonials .header,
+.ClientDashboard .testimonials .header {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 24px;
 }
-@media (max-width: 990px) {
-  .FreelancerDashboard .stats {
-    gap: 25px;
-  }
-  .FreelancerDashboard .stats .card {
-    width: 100%;
-  }
-}
-
-.FreelancerDashboard .testimonials {
-  margin-top: 30px;
-}
-.FreelancerDashboard .testimonials .header {
-  font-size: 35px;
-}
-.FreelancerDashboard .testimonials .cards {
-  margin-top: 42px;
+.FreelancerDashboard .testimonials .cards,
+.ClientDashboard .testimonials .cards {
+  margin-top: 16px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
   gap: 15px;
 }
-.FreelancerDashboard .testimonials .cards .noTestimonials {
-  color: var(--color-orange);
-  font-size: 50px;
+.FreelancerDashboard .testimonials .cards .noTestimonials,
+.ClientDashboard .testimonials .cards .noTestimonials {
+  color: var(--color-grey);
+  font-size: 20px;
   text-align: center;
-  font-weight: 700;
-  height: 270px;
+  height: 200px;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
+  background: white;
+  border-radius: var(--radius);
+  border: 2px dashed #E5E7EB;
 }
-.FreelancerDashboard .testimonials .cards .card {
-  padding: 13px 34px;
+.FreelancerDashboard .testimonials .cards .card,
+.ClientDashboard .testimonials .cards .card {
+  padding: 24px 28px;
   display: flex;
   flex-direction: column;
-  border-radius: 10px;
+  border-radius: var(--radius);
   width: 80%;
-  background-color: var(--color-orange);
+  background: linear-gradient(135deg, var(--color-orange), var(--color-green));
   align-items: center;
   justify-content: flex-start;
-  gap: 10px;
+  gap: 12px;
   cursor: grab;
   height: 100%;
 }
-.FreelancerDashboard .testimonials .cards .card img {
-  width: 130px;
-  height: 130px;
+.FreelancerDashboard .testimonials .cards .card img,
+.ClientDashboard .testimonials .cards .card img {
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.5);
+  object-fit: cover;
 }
-.FreelancerDashboard .testimonials .cards .card .info {
+.FreelancerDashboard .testimonials .cards .card .info,
+.ClientDashboard .testimonials .cards .card .info {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   text-align: center;
-  gap: 18px;
-  margin-top: 18px;
+  gap: 10px;
+  margin-top: 8px;
   min-width: 50%;
 }
-.FreelancerDashboard .testimonials .cards .card .info .cardHeader {
-  font-size: 30px;
-}
-.FreelancerDashboard .testimonials .cards .card .info .cardDescription {
-  font-size: 20px;
-  width: 60%;
-  text-align: center;
+.FreelancerDashboard .testimonials .cards .card .info .cardHeader,
+.ClientDashboard .testimonials .cards .card .info .cardHeader {
+  font-size: 22px;
+  font-weight: 700;
   color: white;
-  font-weight: 500;
 }
-.FreelancerDashboard .swiper-slide {
+.FreelancerDashboard .testimonials .cards .card .info .cardDescription,
+.ClientDashboard .testimonials .cards .card .info .cardDescription {
+  font-size: 16px;
+  width: 80%;
+  text-align: center;
+  color: rgba(255,255,255,0.9);
+  font-weight: 400;
+  line-height: 1.6;
+}
+.FreelancerDashboard .swiper-slide,
+.ClientDashboard .swiper-slide {
   width: 80%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
-.FreelancerDashboard .swiper-wrapper {
-  align-items: center;
-}
+.FreelancerDashboard .swiper-wrapper,
+.ClientDashboard .swiper-wrapper { align-items: center; }
 .FreelancerDashboard .swiper-button-next:after,
-.FreelancerDashboard .swiper-button-prev:after {
-  color: white;
-}
+.FreelancerDashboard .swiper-button-prev:after,
+.ClientDashboard .swiper-button-next:after,
+.ClientDashboard .swiper-button-prev:after { color: white; }
+
+/* Sidebar Menu */
 .Menu {
   display: flex;
-  justify-content: space-between;
-  padding-left: 0px;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 20px 12px;
+  gap: 4px;
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  min-width: 200px;
+  margin-left: 24px;
+  align-self: flex-start;
+  position: sticky;
+  top: 100px;
 }
-.Menu .link {
-  border-radius: 10px;
-}
+.Menu .link { border-radius: var(--radius-sm); }
 .Menu .link a {
   text-decoration: none;
   cursor: pointer;
   display: flex;
-  padding: 14px 21px;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+  gap: 10px;
 }
+.Menu .link a:hover { background-color: var(--color-border-orange); }
 .Menu .link a .linkHeader {
-  padding-left: 12px;
   font-weight: 600;
-  color: var(--color-orange);
+  color: var(--color-grey);
+  font-size: 14px;
 }
-.Menu .link.active {
-  background-color: var(--color-border-orange);
-}
+.Menu .link.active a { background-color: var(--color-border-orange); }
+.Menu .link.active a .linkHeader { color: var(--color-green); }
+.Menu .link.active a img { filter: none; }
 @media (max-width: 990px) {
-  .Menu .link {
-    display: flex;
-    width: 100px;
-    justify-content: center;
+  .Menu {
+    flex-direction: row;
+    min-width: unset;
+    width: 100%;
+    margin-left: 0;
+    margin-top: 16px;
+    position: static;
+    justify-content: space-around;
+    padding: 12px 8px;
   }
-  .Menu .linkHeader {
-    display: none;
-  }
+  .Menu .link { display: flex; justify-content: center; }
+  .Menu .linkHeader { display: none; }
 }
 /* End Dahsboard Freelancer Home*/
 
 /* Start Dashboard Freelancer Service */
 .FreelancerServices .section {
-  min-height: calc(100vh - 273px);
+  min-height: calc(100vh - 80px);
+  flex: 1;
+  padding: 32px 0;
 }
 .FreelancerServices .buttons {
-  margin-block: 73px;
+  margin-block: 32px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-evenly;
-  gap: 130px;
+  gap: 16px;
 }
 .FreelancerServices .buttons button {
   cursor: pointer;
-  padding: 16px 46px;
-  width: 280px;
+  padding: 14px 32px;
   color: white;
-  background-color: var(--color-orange);
-  font-size: 30px;
+  background: linear-gradient(135deg, var(--color-orange), var(--color-green));
+  font-size: 16px;
+  font-weight: 700;
   outline: none;
   border: none;
-  border-radius: 10px;
+  border-radius: 50px;
+  transition: var(--transition);
+  box-shadow: 0 4px 15px rgba(16,185,129,0.35);
+}
+.FreelancerServices .buttons button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(16,185,129,0.5);
 }
 .FreelancerServices .services {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  align-items: center;
-  gap: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 24px;
+  align-items: stretch;
 }
 .FreelancerServices .services a {
   text-decoration: none;
   color: black;
 }
 .FreelancerServices .noServices {
-  color: var(--color-orange);
-  font-size: 50px;
+  color: var(--color-grey);
+  font-size: 20px;
   text-align: center;
-  font-weight: 700;
-  height: 270px;
+  height: 200px;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
+  background: white;
+  border-radius: var(--radius);
+  border: 2px dashed #E5E7EB;
 }
 .FreelancerServices .services .service {
-  width: 294px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   background-color: white;
-  border-radius: 10px;
+  border-radius: var(--radius);
   overflow: hidden;
-  box-shadow: rgba(21, 34, 50, 0.26) 10px 10px 20px;
-  transition: 0.7s;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+  border: 1px solid rgba(16,185,129,0.08);
 }
 .FreelancerServices .services .service:hover {
-  transform: translateY(-10px);
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
 }
 .FreelancerServices .services .service .slider img {
   width: 100%;
-  height: 193px;
+  height: 180px;
   cursor: grab;
+  object-fit: cover;
 }
-.FreelancerServices .services .service .slider img:active {
-  cursor: grabbing;
-}
+.FreelancerServices .services .service .slider img:active { cursor: grabbing; }
 .FreelancerServices .services .service .serviceHeader {
-  font-size: 18px;
+  font-size: 14px;
   display: flex;
   gap: 10px;
-  margin-top: 15px;
-  margin-left: 15px;
+  margin-top: 14px;
+  margin-left: 14px;
   align-items: center;
-  font-weight: 500;
+  font-weight: 600;
 }
 .FreelancerServices .services .service .serviceHeader img {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--color-border-orange);
 }
 .FreelancerServices .services .service .serviceTitle {
   width: 100%;
   overflow: hidden;
-  text-align: center;
-  font-size: 25px;
-  font-weight: 500;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 8px 14px 0;
+  color: var(--color-dark);
 }
 .FreelancerServices .services .service .serviceDescription {
-  margin-left: 17px;
-  margin-right: 29px;
-  width: 249px;
-  height: 83px;
-  word-wrap: break-word;
+  margin: 6px 14px;
+  font-size: 13px;
+  color: var(--color-grey);
   overflow: hidden;
-  text-align: justify;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-height: 1.5;
+  flex: 1;
 }
 .FreelancerServices .services .service .rating-more {
   display: flex;
   align-items: center;
-  padding-right: 24px;
-  margin-top: 15px;
-  margin-left: 17px;
+  padding: 8px 14px;
   justify-content: space-between;
 }
 .FreelancerServices .services .service .rating-more .rating {
-  font-weight: 500;
-  gap: 5px;
+  font-weight: 600;
+  gap: 4px;
   display: flex;
   align-items: center;
+  font-size: 14px;
+  color: var(--color-grey);
 }
 .FreelancerServices .services .service .rating-more button {
-  font-weight: bolder;
+  font-weight: 700;
   cursor: pointer;
-  background-color: var(--color-orange);
+  background: linear-gradient(135deg, var(--color-orange), var(--color-green));
   color: white;
-  padding: 10px 20px;
+  padding: 8px 16px;
   outline: none;
   border: none;
-  border-radius: 10px;
+  border-radius: 50px;
+  font-size: 13px;
+  transition: var(--transition);
+}
+.FreelancerServices .services .service .rating-more button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16,185,129,0.4);
 }
 .FreelancerServices .services .service .rating svg {
-  width: 24px;
-  height: 24px;
-  fill: orange;
+  width: 16px;
+  height: 16px;
+  fill: #F59E0B;
 }
 .FreelancerServices .services .service hr {
-  margin-block: 11.5px;
-  width: 100%;
-  border-top: 0.5px;
+  margin: 8px 0;
+  border: none;
+  border-top: 1px solid #F3F4F6;
 }
 .FreelancerServices .services .service .servicePrice {
-  padding-inline: 29px;
+  padding: 0 14px 12px;
   text-align: right;
-  padding-bottom: 9px;
-  font-size: 20px;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--color-orange);
 }
 @media (max-width: 767px) {
-  .FreelancerServices .buttons {
-    gap: 50px;
-  }
+  .FreelancerServices .buttons { gap: 12px; }
+  .FreelancerServices .services { grid-template-columns: 1fr; }
 }
 /* End Dashboard Freelancer Service */
 
 /* Start Create Service */
 .FreelancerCreateService .section {
-  min-height: calc(100vh - 173px);
+  min-height: calc(100vh - 80px);
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex: 1;
+  padding: 32px 0;
 }
-.FreelancerCreateService .go-back-button {
-  align-self: flex-start;
-  margin-top: 20px;
-}
+.FreelancerCreateService .go-back-button { align-self: flex-start; }
 .FreelancerCreateService .go-back-button button {
-  margin-top: 7px;
   cursor: pointer;
   outline: none;
   border: none;
-  background-color: var(--color-orange);
-  color: white;
-  padding: 10px 55px;
-  font-size: 16px;
-  margin-top: 25px;
-  border-radius: 10px;
+  background: var(--color-border-orange);
+  color: var(--color-green);
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 50px;
+  transition: var(--transition);
+}
+.FreelancerCreateService .go-back-button button:hover {
+  background: #A7F3D0;
 }
 .FreelancerCreateService .createHeader {
-  font-size: 50px;
-  text-align: center;
-  color: var(--color-orange);
-  margin-top: 20px;
-  margin-bottom: 50px;
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--color-dark);
+  margin-top: 24px;
+  margin-bottom: 32px;
+  letter-spacing: -0.5px;
 }
 .FreelancerCreateService form {
-  width: 922px;
+  width: 100%;
+  max-width: 700px;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 20px;
+  background: white;
+  padding: 40px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
 }
 .FreelancerCreateService form label {
   display: inline-block;
-  color: var(--color-orange);
-  font-weight: bold;
-  font-size: 14px;
+  color: var(--color-grey);
+  font-weight: 600;
+  font-size: 13px;
   width: 100%;
   text-align: left;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 .FreelancerCreateService form input {
-  color: white;
-  background-color: var(--color-orange);
-  border: 2px solid var(--color-light-orange);
+  color: var(--color-dark);
+  background-color: var(--color-bg);
+  border: 2px solid #E5E7EB;
   outline: none;
-  width: 90%;
-  padding: 17px 20px;
-  font-size: 18px;
-  border-radius: 10px;
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 15px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+.FreelancerCreateService form input:focus {
+  border-color: var(--color-orange);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(16,185,129,0.1);
 }
 .FreelancerCreateService form textarea {
-  color: white;
-  padding: 17px 20px;
-  background-color: var(--color-orange);
-  border: 1px solid var(--color-light-orange);
+  color: var(--color-dark);
+  padding: 14px 16px;
+  background-color: var(--color-bg);
+  border: 2px solid #E5E7EB;
   outline: none;
-  font-size: 18px;
-  border-radius: 10px;
-  width: 90%;
-  min-width: 90%;
-  max-width: 90%;
-  min-height: 22px;
+  font-size: 15px;
+  border-radius: var(--radius-sm);
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+  min-height: 120px;
+  transition: var(--transition);
+  line-height: 1.6;
+}
+.FreelancerCreateService form textarea:focus {
+  border-color: var(--color-orange);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(16,185,129,0.1);
 }
 .FreelancerCreateService .images {
   cursor: pointer;
-  color: white;
-  background-color: var(--color-orange);
-  border: 2px solid var(--color-light-orange);
-  width: 90%;
-  padding: 17px 20px;
-  font-size: 18px;
-  border-radius: 10px;
+  color: var(--color-orange);
+  background-color: var(--color-border-orange);
+  border: 2px dashed var(--color-light-orange);
+  width: 100%;
+  padding: 16px;
+  font-size: 15px;
+  border-radius: var(--radius-sm);
   text-align: center;
-  font-weight: 500;
+  font-weight: 600;
+  transition: var(--transition);
 }
+.FreelancerCreateService .images:hover { background-color: #A7F3D0; }
 .FreelancerCreateService form button {
-  margin-top: 7px;
   cursor: pointer;
   outline: none;
   border: none;
-  border-radius: 30px;
-  background-color: var(--color-orange);
+  border-radius: 50px;
+  background: linear-gradient(135deg, var(--color-orange), var(--color-green));
   color: white;
-  padding: 10px 55px;
+  padding: 14px 48px;
   font-size: 16px;
-  margin-top: 25px;
+  font-weight: 700;
   align-self: center;
+  transition: var(--transition);
+  box-shadow: 0 4px 15px rgba(16,185,129,0.4);
 }
-
-.FreelancerCreateService form input[type="file"] {
-  display: none;
+.FreelancerCreateService form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(16,185,129,0.5);
 }
+.FreelancerCreateService form input[type="file"] { display: none; }
 .FreelancerCreateService input::placeholder,
-.FreelancerCreateService textarea::placeholder {
-  color: white;
-}
-.FreelancerCreateService input:focus::placeholder,
-.FreelancerCreateService textarea:focus::placeholder {
-  opacity: 0;
-  transition: 0.3s;
-}
-@media (max-width: 930px) {
-  .FreelancerCreateService form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-  }
-}
+.FreelancerCreateService textarea::placeholder { color: #9CA3AF; }
 /* End Create Service */
 
-/* Start Manage Services */
-.FreelancerManageServices .section {
-  min-height: calc(100vh - 173px);
+/* Start Update Service */
+.FreelancerUpdateService .section {
+  min-height: calc(100vh - 80px);
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex: 1;
+  padding: 32px 0;
 }
-.FreelancerManageServices .go-back-button {
-  align-self: flex-start;
-  margin-top: 20px;
-}
-.FreelancerManageServices .go-back-button button {
-  margin-top: 7px;
+.FreelancerUpdateService .go-back-button { align-self: flex-start; }
+.FreelancerUpdateService .go-back-button button {
   cursor: pointer;
   outline: none;
   border: none;
-  background-color: var(--color-orange);
-  color: white;
-  padding: 10px 55px;
-  font-size: 16px;
-  margin-top: 25px;
-  border-radius: 10px;
+  background: var(--color-border-orange);
+  color: var(--color-green);
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 50px;
+  transition: var(--transition);
 }
-.FreelancerManageServices .manageHeader {
-  font-size: 50px;
-  text-align: center;
+.FreelancerUpdateService .go-back-button button:hover { background: #A7F3D0; }
+.FreelancerUpdateService .updateHeader {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--color-dark);
+  margin-top: 24px;
+  margin-bottom: 32px;
+  letter-spacing: -0.5px;
+}
+.FreelancerUpdateService form {
+  width: 100%;
+  max-width: 700px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: white;
+  padding: 40px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+}
+.FreelancerUpdateService form label {
+  display: inline-block;
+  color: var(--color-grey);
+  font-weight: 600;
+  font-size: 13px;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.FreelancerUpdateService form input {
+  color: var(--color-dark);
+  background-color: var(--color-bg);
+  border: 2px solid #E5E7EB;
+  outline: none;
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 15px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+.FreelancerUpdateService form input:focus {
+  border-color: var(--color-orange);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(16,185,129,0.1);
+}
+.FreelancerUpdateService form textarea {
+  color: var(--color-dark);
+  padding: 14px 16px;
+  background-color: var(--color-bg);
+  border: 2px solid #E5E7EB;
+  outline: none;
+  font-size: 15px;
+  border-radius: var(--radius-sm);
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+  min-height: 120px;
+  transition: var(--transition);
+  line-height: 1.6;
+}
+.FreelancerUpdateService form textarea:focus {
+  border-color: var(--color-orange);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(16,185,129,0.1);
+}
+.FreelancerUpdateService .images {
+  cursor: pointer;
   color: var(--color-orange);
-  margin-block: 53px;
+  background-color: var(--color-border-orange);
+  border: 2px dashed var(--color-light-orange);
+  width: 100%;
+  padding: 16px;
+  font-size: 15px;
+  border-radius: var(--radius-sm);
+  text-align: center;
+  font-weight: 600;
+  transition: var(--transition);
+}
+.FreelancerUpdateService .images:hover { background-color: #A7F3D0; }
+.FreelancerUpdateService form button {
+  cursor: pointer;
+  outline: none;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(135deg, var(--color-orange), var(--color-green));
+  color: white;
+  padding: 14px 48px;
+  font-size: 16px;
+  font-weight: 700;
+  align-self: center;
+  transition: var(--transition);
+  box-shadow: 0 4px 15px rgba(16,185,129,0.4);
+}
+.FreelancerUpdateService form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(16,185,129,0.5);
+}
+.FreelancerUpdateService form input[type="file"] { display: none; }
+.FreelancerUpdateService input::placeholder,
+.FreelancerUpdateService textarea::placeholder { color: #9CA3AF; }
+/* End Update Service */
+
+/* Start Manage Services */
+.FreelancerManageServices .section {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 32px 0;
+}
+.FreelancerManageServices .go-back-button { margin-bottom: 8px; }
+.FreelancerManageServices .go-back-button button {
+  cursor: pointer;
+  outline: none;
+  border: none;
+  background: var(--color-border-orange);
+  color: var(--color-green);
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 50px;
+  transition: var(--transition);
+}
+.FreelancerManageServices .go-back-button button:hover { background: #A7F3D0; }
+.FreelancerManageServices .manageHeader {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--color-dark);
+  margin-block: 24px;
+  letter-spacing: -0.5px;
 }
 .FreelancerManageServices table {
   width: 100%;
   border-collapse: collapse;
-  overflow-y: auto;
+  background: white;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
 }
-.FreelancerManageServices table td {
-  width: 25%;
-  padding: 17px 25px;
-}
-.FreelancerManageServices table tr {
-  border-bottom: 1px solid var(--color-grey);
-}
+.FreelancerManageServices table td { padding: 16px 20px; }
+.FreelancerManageServices table tr { border-bottom: 1px solid #F3F4F6; }
+.FreelancerManageServices table tr:last-child { border-bottom: none; }
+.FreelancerManageServices table thead { background: linear-gradient(135deg, var(--color-orange), var(--color-green)); }
 .FreelancerManageServices table thead td {
-  font-size: 30px;
-}
-.FreelancerManageServices .noServices {
-  color: var(--color-orange);
-  font-size: 50px;
-  text-align: center;
+  font-size: 14px;
   font-weight: 700;
-  height: 270px;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.FreelancerManageServices table tbody tr:hover { background: #F9FAFB; }
+.FreelancerManageServices .noServices {
+  color: var(--color-grey);
+  font-size: 20px;
+  text-align: center;
+  height: 200px;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
+  background: white;
+  border-radius: var(--radius);
+  border: 2px dashed #E5E7EB;
 }
-.FreelancerManageServices table tbody td {
-  font-size: 18px;
-}
+.FreelancerManageServices table tbody td { font-size: 15px; color: var(--color-dark); }
 .FreelancerManageServices table tbody td:last-of-type {
-  width: fit-content;
   display: flex;
   flex-wrap: wrap;
-  gap: 18px;
+  gap: 10px;
+  align-items: center;
 }
 .FreelancerManageServices table tbody td button {
-  padding: 13px 33px;
+  padding: 10px 24px;
   color: white;
   cursor: pointer;
   outline: none;
-  font-size: 18px;
+  font-size: 14px;
+  font-weight: 600;
   border: none;
-  min-width: 123px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px;
+  border-radius: 50px;
+  transition: var(--transition);
 }
-.FreelancerManageServices table tbody td a {
-  text-decoration: none;
-}
+.FreelancerManageServices table tbody td button:hover { transform: translateY(-1px); }
+.FreelancerManageServices table tbody td a { text-decoration: none; }
 .FreelancerManageServices table tbody td a:first-of-type button {
-  background-color: var(--color-green);
+  background: linear-gradient(135deg, var(--color-orange), var(--color-green));
+  box-shadow: 0 2px 8px rgba(16,185,129,0.3);
 }
 .FreelancerManageServices table tbody td button:last-of-type {
-  background-color: var(--color-red);
+  background: linear-gradient(135deg, #EF4444, #DC2626);
+  box-shadow: 0 2px 8px rgba(239,68,68,0.3);
 }
 @media (max-width: 550px) {
-  .FreelancerManageServices table {
-    display: inline-block;
-  }
-  .FreelancerManageServices table td {
-    width: 70%;
-  }
-  .FreelancerManageServices table thead td {
-    font-size: 20px;
-  }
-  .FreelancerManageServices table tbody td {
-    font-size: 16px;
-  }
-  .FreelancerManageServices table tbody td button {
-    color: white;
-    cursor: pointer;
-    outline: none;
-    font-size: 16px;
-    border: none;
-    min-width: 117px;
-    justify-content: center;
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-  }
-}
-@media (max-width: 460px) {
-  .FreelancerManageServices table {
-    display: inline-block;
-  }
+  .FreelancerManageServices table { display: block; overflow-x: auto; }
 }
 /* End Manage Services */
 
-/* Start Update Service */
-.FreelancerUpdateService .section {
-  min-height: calc(100vh - 173px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.FreelancerUpdateService .go-back-button {
-  align-self: flex-start;
-  margin-top: 20px;
-}
-.FreelancerUpdateService .go-back-button button {
-  margin-top: 7px;
-  cursor: pointer;
-  outline: none;
-  border: none;
-  background-color: var(--color-orange);
-  color: white;
-  padding: 10px 55px;
-  font-size: 16px;
-  margin-top: 25px;
-  border-radius: 10px;
-}
-.FreelancerUpdateService .updateHeader {
-  font-size: 50px;
-  text-align: center;
-  color: var(--color-orange);
-  margin-block: 53px;
-}
-.FreelancerUpdateService form {
-  width: 922px;
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-}
-.FreelancerUpdateService form label {
-  display: inline-block;
-  color: var(--color-orange);
-  font-weight: bold;
-  font-size: 14px;
-  width: 100%;
-  text-align: left;
-  margin-bottom: 8px;
-}
-.FreelancerUpdateService form input {
-  color: white;
-  background-color: var(--color-orange);
-  border: 2px solid var(--color-light-orange);
-  outline: none;
-  width: 90%;
-  padding: 17px 20px;
-  font-size: 18px;
-  border-radius: 10px;
-}
-.FreelancerUpdateService form textarea {
-  color: white;
-  padding: 17px 20px;
-  background-color: var(--color-orange);
-  border: 1px solid var(--color-light-orange);
-  outline: none;
-  font-size: 18px;
-  border-radius: 10px;
-  width: 90%;
-  min-width: 90%;
-  max-width: 90%;
-  min-height: 22px;
-}
-.FreelancerUpdateService .images {
-  cursor: pointer;
-  color: white;
-  background-color: var(--color-orange);
-  border: 2px solid var(--color-light-orange);
-  width: 90%;
-  padding: 17px 20px;
-  font-size: 18px;
-  border-radius: 10px;
-  text-align: center;
-  font-weight: 500;
-}
-.FreelancerUpdateService button {
-  margin-top: 7px;
-  cursor: pointer;
-  outline: none;
-  border: none;
-  border-radius: 30px;
-  background-color: var(--color-orange);
-  color: white;
-  padding: 10px 55px;
-  font-size: 16px;
-  margin-top: 25px;
-  align-self: center;
-}
-.FreelancerUpdateService form input[type="file"] {
-  display: none;
-}
-.FreelancerUpdateService input::placeholder,
-.FreelancerUpdateService textarea::placeholder {
-  color: white;
-}
-.FreelancerUpdateService input:focus::placeholder,
-.FreelancerUpdateService textarea:focus::placeholder {
-  opacity: 0;
-  transition: 0.3s;
-}
-@media (max-width: 930px) {
-  .FreelancerUpdateService form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-  }
-}
-/* End Update Service */
+/* Update Service — already handled above */
 
 /* Start Profile Section */
 .Profile .section {
-  min-height: calc(100vh - 173px);
+  min-height: calc(100vh - 80px);
   display: flex;
   flex-direction: column;
-  align-items: center;
+  flex: 1;
+  padding: 32px 0;
 }
-.Profile form {
-  width: 100%;
-}
+.Profile form { width: 100%; }
 .Profile .profileHeader {
-  margin-top: 18px;
+  margin-top: 8px;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 16px;
+  background: white;
+  padding: 24px 28px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(16,185,129,0.08);
 }
 .Profile .profiledescription {
   display: flex;
-  gap: 86px;
+  gap: 24px;
   align-items: center;
 }
 .Profile .profiledescription img {
-  width: 160px;
-  height: 160px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
-  margin-top: 25px;
+  object-fit: cover;
+  border: 3px solid var(--color-border-orange);
 }
-.Profile .profileName {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.Profile .profileName { display: flex; flex-direction: column; gap: 4px; }
+.Profile .profileName .name { font-size: 22px; font-weight: 700; color: var(--color-dark); }
+.Profile span { font-size: 14px; color: var(--color-grey); }
+.Profile .profileheaderbuttons { display: flex; gap: 12px; align-items: center; }
+.Profile .profileheaderbuttons button {
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 50px;
+  padding: 10px 28px;
+  transition: var(--transition);
 }
-.Profile .profileName .name {
-  font-size: 35px;
-}
-.Profile span {
-  font-size: 18px;
+.Profile .profileheaderbuttons button:nth-child(1) {
+  background: white;
+  border: 2px solid #E5E7EB;
   color: var(--color-grey);
 }
-.Profile .profileheaderbuttons {
-  display: flex;
-  gap: 30px;
-  align-items: center;
-}
-@media (max-width: 991px) {
-  .Profile .profileheaderbuttons {
-    width: 100%;
-    justify-content: center;
-  }
-}
-@media (max-width: 551px) {
-  .Profile .profiledescription {
-    width: 100%;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    gap: 50px;
-    margin-bottom: 10px;
-  }
-  .Profile .profiledescription {
-    width: 100%;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-}
-.Profile .profileheaderbuttons button {
-  font-size: 18px;
-  background-color: white;
-  cursor: pointer;
-  border-radius: 10px;
-  border: 1px solid var(--color-grey);
-  padding: 12px 40px;
-}
 .Profile .profileheaderbuttons button:nth-child(1):hover {
-  color: white;
-  background-color: var(--color-grey);
-}
-.Profile .profileheaderbuttons button:last-child:hover {
-  color: var(--color-green);
-  background-color: white;
-  outline: 1px solid var(--color-green);
+  background: #F3F4F6;
+  border-color: #D1D5DB;
 }
 .Profile .profileheaderbuttons button:last-child {
-  background-color: var(--color-green);
+  background: linear-gradient(135deg, var(--color-orange), var(--color-green));
   border: none;
-  outline: none;
   color: white;
+  box-shadow: 0 4px 12px rgba(16,185,129,0.35);
+}
+.Profile .profileheaderbuttons button:last-child:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(16,185,129,0.45);
 }
 .Profile .profileinputs {
-  margin-top: 80px;
+  margin-top: 24px;
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 8px 0;
+  border: 1px solid rgba(16,185,129,0.08);
 }
 .Profile .inputSection {
   display: flex;
   align-items: center;
+  padding: 16px 28px;
 }
 .Profile .inputSection label {
-  width: 252px;
+  width: 200px;
   color: var(--color-grey);
-  font-size: 20px;
-  columns: var(--color-grey);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
 }
 .Profile .inputSection input {
-  width: 252px;
-  padding: 18px 28px;
-  border: none;
+  padding: 12px 16px;
+  border: 2px solid #E5E7EB;
   outline: none;
-  border: 0.5px solid var(--color-grey);
-  border-radius: 5px;
+  border-radius: var(--radius-sm);
   width: 100%;
-  font-size: 20px;
+  font-size: 15px;
+  color: var(--color-dark);
+  background: var(--color-bg);
+  transition: var(--transition);
 }
-.Profile hr {
-  margin-block: 30.5px;
+.Profile .inputSection input:focus {
+  border-color: var(--color-orange);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(16,185,129,0.1);
 }
+.Profile .inputSection input[readonly] {
+  background: #F9FAFB;
+  color: var(--color-grey);
+  cursor: not-allowed;
+}
+.Profile hr { margin: 0; border: none; border-top: 1px solid #F3F4F6; }
 .Profile .profilePicture {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 24px 28px;
+  margin-top: 24px;
+  border: 1px solid rgba(16,185,129,0.08);
+  gap: 16px;
 }
-.Profile .profilePicture .profilePictureDescription {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.Profile .profilePicture .profilePictureDescription .picturelabel {
-  font-size: 20px;
-}
+.Profile .profilePicture .profilePictureDescription { display: flex; flex-direction: column; gap: 4px; }
+.Profile .profilePicture .profilePictureDescription .picturelabel .label { font-size: 16px; font-weight: 700; color: var(--color-dark); }
 .Profile .profilePicture img {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--color-border-orange);
 }
-.Profile .profilePicture input[type="file"] {
-  display: none;
-}
-.Profile .profilePicture .picturebuttons {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
+.Profile .profilePicture input[type="file"] { display: none; }
+.Profile .profilePicture .picturebuttons { display: flex; gap: 10px; align-items: center; }
 .Profile .profilePicture .picturebuttons label {
   display: inline-block;
-  font-size: 18px;
-  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 50px;
   cursor: pointer;
-  background-color: var(--color-orange);
-  padding: 12px 40px;
+  background: linear-gradient(135deg, var(--color-orange), var(--color-green));
+  padding: 10px 24px;
   color: white;
+  transition: var(--transition);
+  box-shadow: 0 2px 8px rgba(16,185,129,0.3);
 }
+.Profile .profilePicture .picturebuttons label:hover { transform: translateY(-1px); }
 .Profile .profilePicture .picturebuttons button {
-  font-size: 18px;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  border-radius: 10px;
-  border: 1px solid var(--color-grey);
-  padding: 12px 40px;
-  background-color: var(--color-red);
+  border-radius: 50px;
+  padding: 10px 24px;
+  background: linear-gradient(135deg, #EF4444, #DC2626);
   border: none;
-  outline: none;
   color: white;
+  transition: var(--transition);
+  box-shadow: 0 2px 8px rgba(239,68,68,0.3);
 }
-@media (max-width: 767px) {
-  .Profile .picturebuttons {
-    width: 100%;
-    margin-top: 5px;
-    justify-content: center;
-  }
-}
-@media (max-width: 439px) {
-  .Profile .profilePicture {
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    gap: 10px;
-  }
+.Profile .profilePicture .picturebuttons button:hover { transform: translateY(-1px); }
+@media (max-width: 991px) { .Profile .profileheaderbuttons { width: 100%; justify-content: center; } }
+@media (max-width: 551px) {
+  .Profile .profiledescription { flex-direction: column; text-align: center; }
+  .Profile .inputSection { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .Profile .inputSection label { width: 100%; }
 }
 /* End Profile Section */
 
 /* Start Chat Section */
 .Chat .section {
-  min-height: calc(100vh - 173px);
+  min-height: calc(100vh - 80px);
   display: flex;
-  align-items: center;
-  margin-block: 20px;
-  background-color: whitesmoke;
-  border-radius: 20px;
+  align-items: stretch;
+  margin-block: 24px;
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  flex: 1;
 }
 .Chat .section .messages {
-  padding-top: 86px;
-  padding-left: 42px;
-  padding-right: 51px;
-  width: 31%;
+  padding: 20px 12px;
+  width: 280px;
+  min-width: 280px;
   height: 680px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  background-color: white;
-  border-radius: 20px 0px 0px 20px;
-  overflow: auto;
+  gap: 4px;
+  background: var(--color-bg);
+  border-right: 1px solid #F3F4F6;
+  overflow-y: auto;
 }
 .Chat .section .messages .messageSection {
   display: flex;
-  justify-content: flex-start;
   align-items: center;
-  gap: 20px;
-  padding-right: 20px;
-  background-color: white;
-  border-left: 7px solid white;
-  padding: 8px 12px;
-  border-radius: 10px;
+  gap: 12px;
+  background: transparent;
+  border-left: 3px solid transparent;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
+  transition: var(--transition);
 }
-.Chat .section .messages .messageSection:hover {
-  background-color: whitesmoke;
-}
+.Chat .section .messages .messageSection:hover { background: white; }
 .Chat .section .messages .messageSection.active {
-  border-left: 7px solid var(--color-orange);
-  background-color: whitesmoke;
+  border-left: 3px solid var(--color-orange);
+  background: white;
 }
 .Chat .section .messages .messageSection img {
-  width: 85px;
-  height: 85px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid var(--color-border-orange);
 }
 .Chat .section .messages .messageSection .messageUserInfo {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 3px;
+  overflow: hidden;
 }
 .Chat .messageUserInfo .messageUserName {
-  font-size: 30px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-dark);
 }
-.Chat .messageUserInfo .messageUserShort {
-  font-size: 20px;
+.Chat .messageUserInfo .messagePreview {
+  font-size: 12px;
   color: var(--color-grey);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 160px;
 }
 .Chat .section .zeroMessage {
   width: 100%;
   display: flex;
-  min-height: 100%;
+  min-height: 400px;
   text-align: center;
   justify-content: center;
   align-items: center;
-  position: relative;
 }
-.Chat .section .zeroMessage .nomessage .title {
-  font-size: 70px;
+.Chat .section .zeroMessage .nomessage .title,
+.Chat .section .selectedMessages .nomessage .title {
+  font-size: 48px;
+  font-weight: 800;
   color: var(--color-orange);
+  letter-spacing: -1px;
 }
-.Chat .section .zeroMessage .nomessage span {
-  margin-top: 20px;
-  font-size: 30px;
+.Chat .section .zeroMessage .nomessage span,
+.Chat .section .selectedMessages .nomessage span {
+  margin-top: 12px;
+  font-size: 18px;
   color: var(--color-grey);
+  display: block;
 }
 .Chat .section .selectedMessages {
   width: 100%;
@@ -1883,130 +1865,133 @@ nav button a {
 }
 .Chat .section .selectedMessage {
   width: 100%;
-  height: 766px;
-  overflow: auto;
+  height: 680px;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-}
-.Chat .section .selectedMessages .nomessage .title {
-  font-size: 70px;
-  color: var(--color-orange);
-}
-.Chat .section .selectedMessages .nomessage span {
-  margin-top: 20px;
-  font-size: 30px;
-  color: var(--color-grey);
+  padding-bottom: 70px;
 }
 .Chat .section .selectedMessages .selectedMessageHeader {
-  width: auto;
-  padding-left: 3%;
+  width: 100%;
+  padding: 16px 20px;
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
   position: sticky;
-  background-color: whitesmoke;
-  top: 0px;
-  padding-block: 5px;
+  background: white;
+  top: 0;
+  border-bottom: 1px solid #F3F4F6;
+  z-index: 10;
 }
-
 .Chat .section .selectedMessages .selectedMessageHeader img {
-  width: 70px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  height: 70px;
+  object-fit: cover;
+  border: 2px solid var(--color-border-orange);
 }
 .Chat .section .selectedMessages .selectedMessageHeader span {
-  font-size: 25px;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-dark);
 }
 .Chat .section .selectedMessages .messageDate {
-  padding-block: 15px;
+  padding: 12px 20px;
   color: var(--color-grey);
+  font-size: 12px;
+  text-align: center;
 }
 .Chat .section .selectedMessages .chatM {
   display: flex;
   flex-direction: column;
+  padding: 0 16px;
+  gap: 8px;
 }
 .Chat .section .selectedMessages .myMessage {
-  border-radius: 20px 20px 0px 20px;
-  background-color: var(--color-orange);
-  padding-block: 11px;
-  padding-left: 15px;
-  margin-right: 80px;
+  border-radius: 18px 18px 4px 18px;
+  background: linear-gradient(135deg, var(--color-orange), var(--color-green));
+  padding: 12px 16px;
   align-self: flex-end;
   display: flex;
   flex-direction: column;
-  margin-bottom: 48px;
+  max-width: 65%;
+  box-shadow: 0 2px 8px rgba(16,185,129,0.25);
 }
 .Chat .section .selectedMessages .myMessage .myMessageBody {
-  padding-right: 55px;
   text-align: left;
-  font-size: 20px;
-  width: 285px;
+  font-size: 15px;
+  color: white;
+  line-height: 1.5;
+  word-break: break-word;
 }
 .Chat .section .selectedMessages .myMessage span,
 .Chat .section .selectedMessages .usersMessage span {
   align-self: flex-end;
-  color: var(--color-grey);
-  font-size: 12px;
-  padding-top: 0px;
-  padding-right: 10px;
+  color: rgba(255,255,255,0.7);
+  font-size: 11px;
+  margin-top: 4px;
 }
+.Chat .section .selectedMessages .usersMessage span { color: var(--color-grey); }
 .Chat .section .selectedMessages .usersMessage {
-  background-color: white;
+  background: var(--color-bg);
   align-self: flex-start;
-  padding-block: 11px;
-  padding-right: 15px;
-  border-radius: 20px 20px 20px 0px;
-  margin-left: 81px;
+  padding: 12px 16px;
+  border-radius: 18px 18px 18px 4px;
   display: flex;
   flex-direction: column;
-  margin-bottom: 48px;
+  max-width: 65%;
+  border: 1px solid #E5E7EB;
 }
 .Chat .usersMessage .usersMessageBody {
-  width: 285px;
-  padding-top: 11px;
-  padding-right: 20px;
-  padding-left: 15px;
-  text-align: left;
+  font-size: 15px;
+  color: var(--color-dark);
+  line-height: 1.5;
+  word-break: break-word;
 }
 .Chat .sendBox {
-  width: 96%;
+  width: 100%;
   display: flex;
-  gap: 1%;
-  padding-bottom: 8.5px;
+  gap: 10px;
+  padding: 12px 16px;
   position: absolute;
-  bottom: -3px;
-  margin-inline: auto;
-  height: 58px;
-  align-self: center;
+  bottom: 0;
+  background: white;
+  border-top: 1px solid #F3F4F6;
   align-items: center;
-  background-color: whitesmoke;
 }
 .Chat .sendBox .inputbox {
   display: flex;
-  gap: 1%;
-  border-radius: 30px;
-  background-color: white;
+  gap: 10px;
+  border-radius: 50px;
+  background: var(--color-bg);
+  border: 2px solid #E5E7EB;
   width: 100%;
   align-items: center;
+  padding: 4px 16px;
+  transition: var(--transition);
+}
+.Chat .sendBox .inputbox:focus-within {
+  border-color: var(--color-orange);
+  box-shadow: 0 0 0 4px rgba(16,185,129,0.1);
 }
 .Chat .sendBox .inputbox .svg {
-  padding-left: 17px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  opacity: 0.5;
 }
 .Chat .sendBox .inputbox textarea {
   outline: none;
-  min-height: 17px;
-  padding: 17px 20px;
-  font-size: 20px;
-  border-radius: 10px;
-  white-space: pre-wrap;
+  padding: 10px 0;
+  font-size: 15px;
+  border-radius: 0;
   resize: none;
   border: none;
-  height: 16px;
-  width: 90%;
+  background: transparent;
+  height: 40px;
+  width: 100%;
+  line-height: 1.5;
 }
 .Chat .sendBox button {
   cursor: pointer;
@@ -2014,167 +1999,147 @@ nav button a {
   border: none;
   border-radius: 50%;
   padding: 12px;
-  background-color: var(--color-orange);
-  height: 50px;
+  background: linear-gradient(135deg, var(--color-orange), var(--color-green));
+  height: 48px;
+  width: 48px;
+  flex-shrink: 0;
+  transition: var(--transition);
+  box-shadow: 0 2px 8px rgba(16,185,129,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-@media (max-width: 1400px) {
-  .Chat .section .selectedMessages .myMessage {
-    margin-right: 10px;
-  }
-  .Chat .section .selectedMessages .myMessage {
-    margin-right: 40px;
-  }
-  .Chat .section .selectedMessages .usersMessage {
-    margin-left: 40px;
-  }
-}
+.Chat .sendBox button:hover { transform: scale(1.05); }
 @media (max-width: 1200px) {
-  .Chat .section .messages .messageSection .messageUserInfo {
-    display: none;
-  }
-  .Chat .section .messages {
-    padding-inline: 0px;
-    align-items: center;
-  }
+  .Chat .section .messages { width: 80px; min-width: 80px; padding: 16px 8px; }
+  .Chat .section .messages .messageSection .messageUserInfo { display: none; }
+  .Chat .section .messages .messageSection { justify-content: center; }
 }
-@media (max-width: 991px) {
-  .Chat .section .selectedMessages .selectedMessageHeader {
-    margin-left: 15px;
-  }
-  .Chat .section .selectedMessages .nomessage span {
-    font-size: 25px;
-  }
-  .Chat .section .selectedMessages {
-    width: 69%;
-  }
-  .Chat .section .selectedMessages .nomessage .title {
-    font-size: 60px;
-  }
-  .Chat .section .selectedMessages .myMessage {
-    margin-right: 15px;
-  }
-  .Chat .section .selectedMessages .usersMessage {
-    margin-left: 15px;
-  }
-  .Chat .section .selectedMessages .nomessage span {
-    font-size: 20px;
-  }
-  .Chat .section .selectedMessages .nomessage .title {
-    font-size: 45px;
-  }
-}
-
 @media (max-width: 767px) {
-  .Chat .section .zeroMessage .nomessage .title {
-    font-size: 45px;
-  }
-  .Chat .section .zeroMessage .nomessage span {
-    font-size: 20px;
-  }
-  .Chat .section .selectedMessages .myMessage {
-    width: 250px;
-  }
-  .Chat .section .selectedMessages .myMessage .myMessageBody {
-    width: 195px;
-  }
+  .Chat .section { flex-direction: column; }
+  .Chat .section .messages { width: 100%; min-width: unset; height: auto; flex-direction: row; border-right: none; border-bottom: 1px solid #F3F4F6; overflow-x: auto; }
+  .Chat .section .selectedMessage { height: 500px; }
 }
 /* End Chat Section */
 
 /* Start ServiceDetail Section */
 .ServiceDetail .section {
-  min-height: calc(100vh - 173px);
+  min-height: calc(100vh - 80px);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 100%;
+  flex: 1;
+  padding: 32px 0;
 }
 .ServiceDetail .section .mySwiperContainer {
-  width: 770px;
-  margin-top: 50px;
+  width: 100%;
+  max-width: 700px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  margin-top: 8px;
 }
-.ServiceDetail .go-back-button {
-  align-self: flex-start;
-  margin-top: 20px;
+.ServiceDetail .go-back-button { margin-bottom: 8px; }
+.ServiceDetail .go-back-button button,
+.ServiceDetail .bottom-buttons .go-back-button button {
+  cursor: pointer;
+  outline: none;
+  border: none;
+  background: var(--color-border-orange);
+  color: var(--color-green);
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 50px;
+  transition: var(--transition);
 }
+.ServiceDetail .go-back-button button:hover,
+.ServiceDetail .bottom-buttons .go-back-button button:hover { background: #A7F3D0; }
 .ServiceDetail .bottom-buttons {
   width: 100%;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   align-items: center;
-  margin-bottom: 20px;
-  flex-direction: column-reverse;
-}
-.ServiceDetail .bottom-buttons .go-back-button {
-  margin: 0px;
+  margin-top: 24px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 .ServiceDetail .bottom-buttons .cancelled {
-  background-color: var(--color-red);
+  background: linear-gradient(135deg, #EF4444, #DC2626);
+  box-shadow: 0 2px 8px rgba(239,68,68,0.3);
 }
 .ServiceDetail .bottom-buttons .completed {
-  background-color: var(--color-green);
+  background: linear-gradient(135deg, var(--color-orange), var(--color-green));
+  box-shadow: 0 2px 8px rgba(16,185,129,0.3);
 }
 .ServiceDetail .bottom-buttons .statusCompleted,
 .ServiceDetail .bottom-buttons .statusCancelled {
-  font-weight: 500;
-  font-size: 50px;
+  font-weight: 700;
+  font-size: 20px;
+  padding: 10px 24px;
+  border-radius: 50px;
 }
 .ServiceDetail .bottom-buttons .statusCompleted {
+  background: var(--color-border-orange);
   color: var(--color-green);
 }
 .ServiceDetail .bottom-buttons .statusCancelled {
+  background: #FEE2E2;
   color: var(--color-red);
 }
 .ServiceDetail .testimonialForm {
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
+  margin-top: 24px;
 }
 .ServiceDetail .testimonialForm form {
-  width: 500px;
+  width: 100%;
+  max-width: 560px;
   display: flex;
-  margin-bottom: 20px;
-  gap: 20px;
-  align-items: center;
+  gap: 16px;
+  align-items: flex-start;
+  background: white;
+  padding: 24px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
 }
 .ServiceDetail .testimonialForm form img {
-  width: 100px;
-  height: 100px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
-  cursor: pointer;
+  object-fit: cover;
+  border: 2px solid var(--color-border-orange);
+  flex-shrink: 0;
 }
 .ServiceDetail .testimonialForm form .testimonialHeader {
-  color: var(--color-orange);
-  font-size: 29px;
-  font-weight: 500;
-  margin-bottom: 10px;
-}
-.ServiceDetail .testimonialForm form .stars {
-  width: 100%;
-}
-.ServiceDetail .testimonialForm form textarea {
-  color: var(--color-orange);
-  outline: none;
-  max-width: 320px;
-  min-height: 18px;
-  padding: 17px 20px;
-  background-color: var(--color-orange);
-  border: 1px solid var(--color-light-orange);
-  color: white;
+  color: var(--color-dark);
   font-size: 18px;
-  border-radius: 10px;
+  font-weight: 700;
+  margin-bottom: 8px;
 }
-.ServiceDetail .testimonialForm form textarea::placeholder {
-  color: white;
+.ServiceDetail .testimonialForm form .stars { width: 100%; display: flex; gap: 4px; }
+.ServiceDetail .testimonialForm form textarea {
+  color: var(--color-dark);
+  outline: none;
+  width: 100%;
+  min-height: 80px;
+  padding: 12px 14px;
+  background: var(--color-bg);
+  border: 2px solid #E5E7EB;
+  font-size: 14px;
+  border-radius: var(--radius-sm);
+  resize: vertical;
+  transition: var(--transition);
+  line-height: 1.5;
 }
-.ServiceDetail .testimonialForm form textarea:focus::placeholder {
-  opacity: 0;
-  transition: 0.3s;
+.ServiceDetail .testimonialForm form textarea:focus {
+  border-color: var(--color-orange);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(16,185,129,0.1);
 }
-.ServiceDetail .testimonialForm form button {
-  width: 95%;
-}
+.ServiceDetail .testimonialForm form textarea::placeholder { color: #9CA3AF; }
 .ServiceDetail .testimonialForm form .form-input {
-  width: 500px;
+  width: 100%;
   display: flex;
   gap: 10px;
   flex-direction: column;
@@ -2183,125 +2148,88 @@ nav button a {
   cursor: pointer;
   outline: none;
   border: none;
-  background-color: var(--color-orange);
+  background: linear-gradient(135deg, var(--color-orange), var(--color-green));
   color: white;
-  padding: 10px 55px;
-  font-size: 16px;
-  margin-top: 25px;
-  border-radius: 10px;
-  width: 195px;
+  padding: 12px 32px;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 50px;
+  transition: var(--transition);
+  box-shadow: 0 2px 8px rgba(16,185,129,0.3);
 }
-.ServiceDetail .swiper-container {
-  width: 100%;
-}
+.ServiceDetail button:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(16,185,129,0.4); }
+.ServiceDetail .swiper-container { width: 100%; }
 .ServiceDetail .section .swiper-container img {
   width: 100%;
-  max-height: 500px;
-  min-height: 235px;
+  max-height: 420px;
+  min-height: 200px;
   cursor: grab;
-}
-.ServiceDetail .section .swiper-container img:active {
-  cursor: grabbing;
+  object-fit: cover;
 }
 .ServiceDetail .section .service-title {
   width: 100%;
-  word-wrap: break-word;
-  text-align: center;
-  font-size: 50px;
-  margin-block: 70px;
+  font-size: 32px;
+  font-weight: 800;
+  margin-block: 24px;
+  color: var(--color-dark);
+  letter-spacing: -0.5px;
 }
 .ServiceDetail .section .service-description {
-  font-size: 20px;
+  font-size: 16px;
   width: 100%;
-  word-wrap: break-word;
-  text-align: justify;
+  color: var(--color-grey);
+  line-height: 1.7;
 }
 .ServiceDetail .section .service-price {
-  font-size: 38px;
-  margin-block: 25px;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--color-orange);
+  margin-block: 16px;
 }
 .ServiceDetail .section .service-price-provider {
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background: white;
+  padding: 16px 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  margin-block: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 .ServiceDetail .section .service-price-provider .price {
-  font-size: 38px;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--color-orange);
 }
 .ServiceDetail .section .service-price-provider .provider {
   display: flex;
-  gap: 70px;
+  gap: 12px;
   align-items: center;
 }
 .ServiceDetail .section .service-price-provider .provider span {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-grey);
 }
 .ServiceDetail .section .service-price-provider .provider img {
-  width: 160px;
-  height: 160px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
-  cursor: pointer;
-}
-@media (max-width: 770px) {
-  .ServiceDetail .section .mySwiperContainer {
-    width: 100%;
-  }
-}
-@media (max-width: 767px) {
-  .ServiceDetail .section .service-price-provider {
-    flex-direction: column;
-  }
-  .ServiceDetail .section .service-price-provider .provider {
-    gap: 20px;
-    margin-top: 20px;
-  }
-  .ServiceDetail .section .service-price-provider .provider img {
-    width: 100px;
-    height: 100px;
-  }
+  object-fit: cover;
+  border: 2px solid var(--color-border-orange);
 }
 @media (max-width: 570px) {
-  .ServiceDetail .bottom-buttons {
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-  }
-  .ServiceDetail .testimonialForm form {
-    flex-direction: column;
-    margin-block: 20px;
-  }
-  .ServiceDetail .testimonialForm form .form-input {
-    align-items: center;
-    width: 100%;
-  }
-  .ServiceDetail .testimonialForm form .stars {
-    display: flex;
-    justify-content: center;
-  }
-  .ServiceDetail .testimonialForm form textarea {
-    max-width: none;
-    width: 87%;
-  }
+  .ServiceDetail .testimonialForm form { flex-direction: column; }
+  .ServiceDetail .testimonialForm form .stars { justify-content: center; }
 }
 /* End ServiceDetail Section */
 
-/* Start Client Dashboard */
-.ClientDashboard .section {
-  min-height: calc(100vh - 173px);
-}
-.ClientDashboard .header {
-  font-size: 40px;
-  margin-top: 20px;
-}
+/* Start Client Dashboard — uses shared styles above */
 .ClientDashboard .swiper-button-next:after,
-.ClientDashboard .swiper-button-prev:after {
-  color: white;
-}
-.ClientDashboard .swiper-pagination-clickable .swiper-pagination-bullet {
-  background-color: white;
-}
+.ClientDashboard .swiper-button-prev:after { color: white; }
 .ClientDashboard .swiper-slide {
   width: 80%;
   display: flex;
@@ -2309,285 +2237,169 @@ nav button a {
   justify-content: center;
   align-items: center;
 }
-.ClientDashboard .swiper-wrapper {
-  align-items: center;
-}
-.ClientDashboard .stats {
-  margin-top: 31px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: space-evenly;
-}
-.ClientDashboard .stats .card {
-  padding: 39px 20px;
-  width: 370px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: rgba(21, 34, 50, 0.26) 10px 10px 20px;
-  border-radius: 10px;
-}
-.ClientDashboard .stats .card .info {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-.ClientDashboard .stats .card .info .title {
-  font-size: 16px;
-  color: var(--color-grey);
-}
-.ClientDashboard .stats .card .info .body-stat {
-  font-size: 28px;
-}
-.ClientDashboard .stats .card .logo {
-  width: 62px;
-  height: 62px;
-  border-radius: 50%;
-  background-color: var(--color-border-orange);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-@media (max-width: 1400px) {
-  .ClientDashboard .stats {
-    gap: 60px;
-  }
-  .ClientDashboard .stats .card {
-    width: 500px;
-  }
-}
-@media (max-width: 1200px) {
-  .ClientDashboard .stats {
-    gap: 25px;
-  }
-  .ClientDashboard .stats .card {
-    width: 420px;
-  }
-}
-@media (max-width: 990px) {
-  .ClientDashboard .stats {
-    gap: 25px;
-  }
-  .ClientDashboard .stats .card {
-    width: 100%;
-  }
-}
-.ClientDashboard .testimonials {
-  margin-top: 30px;
-}
-.ClientDashboard .serverStopped {
-  color: var(--color-orange);
-  font-size: 50px;
-  text-align: center;
-  font-weight: 700;
-  height: 78vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-.ClientDashboard .testimonials .cards .noTestimonials {
-  color: var(--color-orange);
-  font-size: 50px;
-  text-align: center;
-  font-weight: 700;
-  height: 270px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-.ClientDashboard .testimonials .header {
-  font-size: 35px;
-}
-.ClientDashboard .testimonials .cards {
-  margin-top: 42px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  gap: 15px;
-}
-.ClientDashboard .testimonials .cards .card {
-  padding: 13px 34px;
-  display: flex;
-  flex-direction: column;
-  border-radius: 10px;
-  width: 80%;
-  background-color: var(--color-orange);
-  align-items: center;
-  justify-content: flex-start;
-  gap: 10px;
-  cursor: grab;
-  height: 100%;
-}
-.ClientDashboard .testimonials .cards .card img {
-  width: 130px;
-  height: 130px;
-  border-radius: 50%;
-}
-.ClientDashboard .testimonials .cards .card .info {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  text-align: center;
-  gap: 18px;
-  margin-top: 18px;
-  min-width: 50%;
-}
-.ClientDashboard .testimonials .cards .card .info .cardHeader {
-  font-size: 30px;
-}
-.ClientDashboard .testimonials .cards .card .info .cardDescription {
-  font-size: 20px;
-  width: 60%;
-  text-align: center;
-  color: white;
-  font-weight: 500;
-}
+.ClientDashboard .swiper-wrapper { align-items: center; }
 /* End Client Dashboard */
 
 /* Start Client Freelancers */
 .ClientServices .section {
-  min-height: calc(100vh - 273px);
+  min-height: calc(100vh - 80px);
+  flex: 1;
+  padding: 32px 0;
 }
 .ClientServices .noServices {
-  color: var(--color-orange);
-  font-size: 50px;
+  color: var(--color-grey);
+  font-size: 18px;
   text-align: center;
-  font-weight: 700;
-  height: 270px;
+  height: 200px;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
+  background: white;
+  border-radius: var(--radius);
+  border: 2px dashed #E5E7EB;
 }
 .ClientServices .buttons {
-  margin-block: 73px;
+  margin-bottom: 28px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-evenly;
-  gap: 130px;
+  align-items: center;
+  gap: 12px;
 }
+.ClientServices .buttons input[type="text"] {
+  padding: 10px 18px;
+  border-radius: 50px;
+  border: 2px solid #E5E7EB;
+  outline: none;
+  font-size: 14px;
+  background: white;
+  color: var(--color-dark);
+  width: 260px;
+  transition: var(--transition);
+}
+.ClientServices .buttons input[type="text"]:focus {
+  border-color: var(--color-orange);
+  box-shadow: 0 0 0 4px rgba(16,185,129,0.1);
+}
+.ClientServices .buttons input[type="text"]::placeholder { color: #9CA3AF; }
 .ClientServices .buttons select {
   cursor: pointer;
-  padding: 10px 20px 10px 32px;
-  width: 229px;
-  color: white;
-  background-color: var(--color-orange);
-  font-size: 20px;
+  padding: 10px 16px;
+  color: var(--color-dark);
+  background: white;
+  font-size: 14px;
+  font-weight: 600;
   outline: none;
-  border: none;
-  border-radius: 10px;
-  border-right: 15px solid var(--color-orange);
-  text-align: center;
+  border: 2px solid #E5E7EB;
+  border-radius: 50px;
+  transition: var(--transition);
 }
-.ClientServices .buttons select option {
-  text-align: center;
-}
+.ClientServices .buttons select:focus { border-color: var(--color-orange); }
 .ClientServices .services {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  align-items: center;
-  gap: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  align-items: stretch;
 }
-.ClientServices .services a {
-  text-decoration: none;
-  color: black;
-}
+.ClientServices .services a { text-decoration: none; color: black; }
 .ClientServices .services .service {
-  width: 294px;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: white;
-  border-radius: 10px;
+  background: white;
+  border-radius: var(--radius);
   overflow: hidden;
-  box-shadow: rgba(21, 34, 50, 0.26) 10px 10px 20px;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+  border: 1px solid rgba(16,185,129,0.08);
 }
-.ClientServices .services .service img {
-  cursor: grab;
-  width: 100%;
-  height: 193px;
+.ClientServices .services .service:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
 }
+.ClientServices .services .service .slider { width: 100%; height: 180px; overflow: hidden; }
+.ClientServices .services .service .slider img { cursor: grab; width: 100%; height: 180px; object-fit: cover; }
 .ClientServices .services .service .serviceHeader {
-  font-size: 18px;
+  font-size: 14px;
   display: flex;
   gap: 10px;
-  margin-top: 15px;
-  margin-left: 15px;
+  margin-top: 14px;
+  margin-left: 14px;
   align-items: center;
-  font-weight: 500;
+  font-weight: 600;
 }
 .ClientServices .services .service .serviceHeader img {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid var(--color-border-orange);
 }
+.ClientServices .services .service .serviceBody { margin-top: 8px; flex: 1; display: flex; flex-direction: column; }
 .ClientServices .services .service .serviceTitle {
   width: 100%;
   overflow: hidden;
-  text-align: center;
-  font-size: 25px;
-  font-weight: 500;
-}
-.ClientServices .services .service .serviceBody {
-  margin-top: 15px;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 0 14px;
+  color: var(--color-dark);
 }
 .ClientServices .services .service .serviceDescription {
-  margin-left: 17px;
-  margin-right: 29px;
-  width: 249px;
-  height: 83px;
-  word-wrap: break-word;
+  margin: 6px 14px;
+  flex: 1;
+  font-size: 13px;
+  color: var(--color-grey);
   overflow: hidden;
-  text-align: justify;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-height: 1.5;
 }
 .ClientServices .services .service .rating-more {
   display: flex;
   align-items: center;
-  padding-right: 24px;
-  margin-top: 15px;
-  margin-left: 17px;
+  padding: 8px 14px;
   justify-content: space-between;
 }
 .ClientServices .services .service .rating-more .rating {
-  font-weight: 500;
-  gap: 5px;
+  font-weight: 600;
+  gap: 4px;
   display: flex;
   align-items: center;
+  font-size: 13px;
+  color: var(--color-grey);
 }
 .ClientServices .services .service .rating-more button {
-  font-weight: bolder;
+  font-weight: 700;
   cursor: pointer;
-  background-color: var(--color-orange);
+  background: linear-gradient(135deg, var(--color-orange), var(--color-green));
   color: white;
-  padding: 10px 20px;
+  padding: 7px 14px;
   outline: none;
   border: none;
-  border-radius: 10px;
+  border-radius: 50px;
+  font-size: 12px;
+  transition: var(--transition);
 }
-.ClientServices .services .service .rating svg {
-  width: 24px;
-  height: 24px;
-  fill: orange;
-}
-.ClientServices .services .service hr {
-  margin-block: 11.5px;
-  width: 100%;
-  border-top: 0.5px;
-}
+.ClientServices .services .service .rating-more button:hover { transform: translateY(-1px); }
+.ClientServices .services .service .rating svg { width: 16px; height: 16px; fill: #F59E0B; }
+.ClientServices .services .service hr { margin: 8px 0; border: none; border-top: 1px solid #F3F4F6; }
 .ClientServices .services .service .servicePrice {
-  padding-inline: 29px;
+  padding: 0 14px 12px;
   text-align: right;
-  padding-bottom: 9px;
-  font-size: 20px;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--color-orange);
 }
 @media (max-width: 767px) {
-  .ClientServices .buttons {
-    gap: 50px;
-  }
+  .ClientServices .buttons { gap: 10px; }
+  .ClientServices .services { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+}
+@media (max-width: 480px) {
+  .ClientServices .services { grid-template-columns: 1fr; }
+  .ClientServices .buttons input[type="text"] { width: 100%; }
 }
 /* End Client Freelancers */
 
@@ -2603,217 +2415,166 @@ nav button a {
 
 /* Start ClientOrders Section */
 .ClientOrders .section {
-  min-height: calc(100vh - 215px);
+  min-height: calc(100vh - 80px);
+  flex: 1;
+  padding: 32px 0;
 }
 .ClientOrders .orders-header {
-  font-size: 50px;
-  text-align: center;
-  color: var(--color-orange);
-  margin-block: 40px;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--color-dark);
+  margin-bottom: 24px;
+  letter-spacing: -0.5px;
 }
 .ClientOrders .filterOrders {
   display: flex;
-  gap: 10px;
-  justify-content: center;
+  gap: 8px;
   align-items: center;
   flex-wrap: wrap;
-  margin-bottom: 3em;
+  margin-bottom: 28px;
 }
 .ClientOrders .filter {
   display: flex;
-  justify-content: flex-start;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   cursor: pointer;
-  font-size: 20px;
-  padding: 10px 12px;
-  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 50px;
+  transition: var(--transition);
+  border: 2px solid transparent;
 }
-.ClientOrders .filter.ongoing {
-  color: var(--color-orange);
-}
-.ClientOrders .filter.completed {
-  color: var(--color-green);
-}
-.ClientOrders .filter.cancelled {
-  color: var(--color-red);
-}
-.ClientOrders .filter.all:hover {
-  background-color: black;
-  color: white;
-}
-.ClientOrders .filter.ongoing:hover {
-  background-color: var(--color-orange);
-  color: white;
-}
-.ClientOrders .filter.completed:hover {
-  background-color: var(--color-green);
-  color: white;
-}
-.ClientOrders .filter.cancelled:hover {
-  background-color: var(--color-red);
-  color: white;
-}
-.ClientOrders .filter.all.active {
-  background-color: black;
-  color: white;
-}
-.ClientOrders .filter.ongoing.active {
-  background-color: var(--color-orange);
-  color: white;
-}
-.ClientOrders .filter.completed.active {
-  background-color: var(--color-green);
-  color: white;
-}
-.ClientOrders .filter.cancelled.active {
-  background-color: var(--color-red);
-  color: white;
-}
-.ClientOrders .filter svg {
-  width: 30px;
-  height: 30px;
-}
+.ClientOrders .filter.all { color: var(--color-grey); border-color: #E5E7EB; }
+.ClientOrders .filter.ongoing { color: var(--color-orange); border-color: var(--color-border-orange); }
+.ClientOrders .filter.completed { color: var(--color-green); border-color: #D1FAE5; }
+.ClientOrders .filter.cancelled { color: var(--color-red); border-color: #FEE2E2; }
+.ClientOrders .filter.all:hover, .ClientOrders .filter.all.active { background: #F3F4F6; border-color: #D1D5DB; color: var(--color-dark); }
+.ClientOrders .filter.ongoing:hover, .ClientOrders .filter.ongoing.active { background: var(--color-border-orange); }
+.ClientOrders .filter.completed:hover, .ClientOrders .filter.completed.active { background: #D1FAE5; }
+.ClientOrders .filter.cancelled:hover, .ClientOrders .filter.cancelled.active { background: #FEE2E2; }
+.ClientOrders .filter svg { width: 18px; height: 18px; }
 .ClientOrders .services {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  align-items: center;
-  gap: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 24px;
 }
 .ClientOrders .noServices {
-  color: var(--color-orange);
-  font-size: 50px;
+  color: var(--color-grey);
+  font-size: 18px;
   text-align: center;
-  font-weight: 700;
-  height: 270px;
+  height: 200px;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
+  background: white;
+  border-radius: var(--radius);
+  border: 2px dashed #E5E7EB;
 }
 .ClientOrders .serviceTitle {
   width: 100%;
   overflow: hidden;
-  text-align: center;
-  font-size: 25px;
-  font-weight: 500;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 8px 14px 0;
 }
-.ClientOrders .services a {
-  text-decoration: none;
-  color: black;
-}
+.ClientOrders .services a { text-decoration: none; color: black; }
 .ClientOrders .services .service {
-  width: 294px;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: white;
-  border-radius: 10px;
+  background: white;
+  border-radius: var(--radius);
   overflow: hidden;
-  box-shadow: rgba(21, 34, 50, 0.26) 10px 10px 20px;
-  transition: 0.5s;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+  border: 1px solid rgba(16,185,129,0.08);
 }
 .ClientOrders .services .service:hover {
-  transform: translateY(-5px);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
 }
 .ClientOrders .services .service .slider img {
   cursor: grab;
   width: 100%;
-  height: 193px;
+  height: 180px;
+  object-fit: cover;
 }
-.ClientOrders .services .service .slider img:active {
-  cursor: grabbing;
-}
-
 .ClientOrders .services .service .serviceHeader {
-  font-size: 18px;
+  font-size: 14px;
   display: flex;
   gap: 10px;
-  margin-top: 15px;
-  margin-left: 15px;
+  margin-top: 14px;
+  margin-left: 14px;
   align-items: center;
-  font-weight: 500;
+  font-weight: 600;
 }
 .ClientOrders .services .service .serviceHeader img {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--color-border-orange);
 }
-.ClientOrders .services .service .serviceBody {
-  margin-top: 15px;
-}
+.ClientOrders .services .service .serviceBody { margin-top: 8px; flex: 1; }
 .ClientOrders .services .service .serviceDescription {
-  margin-left: 17px;
-  margin-right: 29px;
-  width: 249px;
-  height: 83px;
-  word-wrap: break-word;
+  margin: 6px 14px;
+  font-size: 13px;
+  color: var(--color-grey);
   overflow: hidden;
-  text-align: justify;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-height: 1.5;
 }
 .ClientOrders .services .service .rating-more {
   display: flex;
   align-items: center;
-  padding-right: 24px;
-  margin-top: 15px;
-  margin-left: 17px;
+  padding: 8px 14px;
   justify-content: space-between;
 }
 .ClientOrders .services .service .rating-more .rating {
-  font-weight: 500;
-  gap: 5px;
+  font-weight: 600;
+  gap: 4px;
   display: flex;
   align-items: center;
+  font-size: 13px;
+  color: var(--color-grey);
 }
 .ClientOrders .services .service .rating-more button {
-  font-weight: bolder;
+  font-weight: 700;
   cursor: pointer;
-  background-color: var(--color-orange);
+  background: linear-gradient(135deg, var(--color-orange), var(--color-green));
   color: white;
-  padding: 10px 20px;
+  padding: 7px 14px;
   outline: none;
   border: none;
-  border-radius: 10px;
+  border-radius: 50px;
+  font-size: 12px;
+  transition: var(--transition);
 }
-.ClientOrders .services .service .rating svg {
-  width: 24px;
-  height: 24px;
-  fill: orange;
-}
-.ClientOrders .services .service hr {
-  margin-block: 11.5px;
-  width: 100%;
-  border-top: 1px;
-}
+.ClientOrders .services .service .rating-more button:hover { transform: translateY(-1px); }
+.ClientOrders .services .service .rating svg { width: 16px; height: 16px; fill: #F59E0B; }
+.ClientOrders .services .service hr { margin: 8px 0; border: none; border-top: 1px solid #F3F4F6; }
 .ClientOrders .services .service .servicePrice {
-  padding-inline: 29px;
+  padding: 0 14px 6px;
   text-align: right;
-  font-size: 20px;
-}
-.ClientOrders .services .service .serviceState {
-  padding-bottom: 9px;
-  padding-inline: 29px;
-  text-align: right;
-  font-size: 20px;
-}
-.ClientOrders .services .service .serviceState .completed,
-.ClientOrders .services .service .serviceState .ongoing,
-.ClientOrders .services .service .serviceState .cancelled {
-  font-weight: bold;
-}
-
-.ClientOrders .services .service .serviceState .completed {
-  color: var(--color-green);
-}
-.ClientOrders .services .service .serviceState .ongoing {
+  font-size: 16px;
+  font-weight: 800;
   color: var(--color-orange);
 }
-.ClientOrders .services .service .serviceState .cancelled {
-  color: var(--color-red);
+.ClientOrders .services .service .serviceState {
+  padding: 0 14px 12px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 600;
 }
+.ClientOrders .services .service .serviceState .completed { color: var(--color-green); }
+.ClientOrders .services .service .serviceState .ongoing { color: var(--color-orange); }
+.ClientOrders .services .service .serviceState .cancelled { color: var(--color-red); }
 @media (max-width: 767px) {
-  .ClientOrders .buttons {
-    gap: 50px;
-  }
+  .ClientOrders .services { grid-template-columns: 1fr; }
 }
 /* End ClientOrders Section */

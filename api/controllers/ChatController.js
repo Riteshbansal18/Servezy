@@ -42,7 +42,7 @@ const userChats = async (userId) => {
     if (userChats.length != 0) {
       let conversationUsersInfo = [];
       for (let i of userChats) {
-        const chatWith = i.between[0] != userId ? i.between[0] : i.between[1];
+        const chatWith = i.between[0].toString() !== userId.toString() ? i.between[0] : i.between[1];
         const chatWithUserInfo = await User.findById(chatWith);
         const lastMessageWithUser = await Message.findOne({
           chatId: i._id,
@@ -51,7 +51,7 @@ const userChats = async (userId) => {
           _id: i._id,
           avatar: chatWithUserInfo.image,
           username: chatWithUserInfo.username,
-          msg: lastMessageWithUser.text,
+          msg: lastMessageWithUser ? lastMessageWithUser.text : "",
         });
       }
       return conversationUsersInfo;
@@ -67,7 +67,7 @@ const getMessages = async (chatId, userId) => {
   const chatTime = selectedChat.createdAt;
   if (selectedUser != null && selectedChat != null) {
     const withUser =
-      selectedChat.between[0] != userId
+      selectedChat.between[0].toString() !== userId.toString()
         ? selectedChat.between[0]
         : selectedChat.between[1];
     const withUserInfo = await User.findById(withUser);

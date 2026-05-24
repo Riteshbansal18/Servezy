@@ -19,6 +19,13 @@ export default function FreelancerUpdateService() {
     const [description, setDescription] = useState("")
     const [price, setPrice] = useState("")
     const [image, setImage] = useState({ length: 0 })
+    const [imagePreviews, setImagePreviews] = useState([])
+
+    const handleImageChange = (e) => {
+        setImage(e.target.files)
+        const previews = Array.from(e.target.files).map(f => URL.createObjectURL(f))
+        setImagePreviews(previews)
+    }
 
     useEffect(() => {
         tokenExists(token, navigate, dispatch).then(data => (data == false || JSON.parse(localStorage.getItem('userInfo')).role != "freelancer" || JSON.parse(localStorage.getItem('userInfo'))._id != id) && navigate("/login"))
@@ -69,8 +76,8 @@ export default function FreelancerUpdateService() {
             if (isNaN(parseFloat(myForm.price)) || parseFloat(myForm.price) < 5) {
                 err.push('Price Invalid. It must be a number greater or equal to 5');
             }
-            if (myForm.image.length == 0 || myForm.image.length < 3 || myForm.image.length > 6) {
-                err.push('Please select between 3 and 6 images');
+            if (myForm.image.length == 0 || myForm.image.length < 2 || myForm.image.length > 6) {
+                err.push('Please select between 2 and 6 images');
             }
             else {
                 let cpt = 0
@@ -147,9 +154,17 @@ export default function FreelancerUpdateService() {
                                 <input type="text" name="price" placeholder="256" onChange={e => setPrice(e.target.value)} value={price} id="price" />
                             </div>
                             <div className="form-section">
-                                <label className="images" htmlFor="images">Select Images</label>
-                                <input type="file" onChange={e => setImage(e.target.files)} name="images" multiple id="images" />
+                                <label className="images" htmlFor="images">Select Images (2–6)</label>
+                                <input type="file" onChange={e => handleImageChange(e)} name="images" multiple id="images" />
                             </div>
+                            {imagePreviews.length > 0 && (
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '10px' }}>
+                                    {imagePreviews.map((src, i) => (
+                                        <img key={i} src={src} alt={`preview ${i + 1}`}
+                                            style={{ width: '100px', height: '80px', objectFit: 'cover', borderRadius: '8px', border: '2px solid var(--color-light-orange)' }} />
+                                    ))}
+                                </div>
+                            )}
                             <button>Update</button>
                         </form>
                     </div>
