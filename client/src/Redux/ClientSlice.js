@@ -164,6 +164,40 @@ export const makeTestimonial = createAsyncThunk(
     }
   }
 );
+
+export const createPaymentOrder = createAsyncThunk(
+  "client/createPaymentOrder",
+  async (serviceId, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await myAxios.post(
+        `/client/payment/create`,
+        { serviceId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return res.data;
+    } catch (e) {
+      if (e.message === "Network Error") return rejectWithValue("Check The Server");
+    }
+  }
+);
+
+export const verifyPayment = createAsyncThunk(
+  "client/verifyPayment",
+  async ({ serviceId, razorpayOrderId, razorpayPaymentId, razorpaySignature }, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await myAxios.post(
+        `/client/payment/verify`,
+        { serviceId, razorpayOrderId, razorpayPaymentId, razorpaySignature },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return res.data;
+    } catch (e) {
+      if (e.message === "Network Error") return rejectWithValue("Check The Server");
+    }
+  }
+);
 const clientSlice = createSlice({
   name: "client",
   initialState: {
@@ -225,6 +259,20 @@ const clientSlice = createSlice({
       state.data = action.payload;
     });
     builder.addCase(makeTestimonial.rejected, (state, action) => {
+      state.error = action.payload;
+    });
+    // Create Payment Order
+    builder.addCase(createPaymentOrder.fulfilled, (state, action) => {
+      state.data = action.payload;
+    });
+    builder.addCase(createPaymentOrder.rejected, (state, action) => {
+      state.error = action.payload;
+    });
+    // Verify Payment
+    builder.addCase(verifyPayment.fulfilled, (state, action) => {
+      state.data = action.payload;
+    });
+    builder.addCase(verifyPayment.rejected, (state, action) => {
       state.error = action.payload;
     });
   },

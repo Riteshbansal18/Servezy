@@ -6,7 +6,7 @@ import { tokenExists } from '../Redux/UserSlice';
 import { useEffect, useRef, useState } from 'react';
 import { showService } from '../Redux/FreelancerSlice';
 import { toast } from 'react-toastify';
-import { makeOrder, makeTestimonial, orderInfo, serviceInfo, updateOrderStatus } from '../Redux/ClientSlice';
+import { makeTestimonial, orderInfo, serviceInfo, updateOrderStatus, createPaymentOrder, verifyPayment } from '../Redux/ClientSlice';
 import FreelancerMenu from './FreelancerComponents/FreelancerMenu';
 import Slider from './Slider';
 import noImage from "../../src/assets/Images/no-image.png"
@@ -138,45 +138,70 @@ export default function ServiceDetails({ type }) {
 
     const handleOrder = () => {
         setLoading(true)
-        dispatch(makeOrder(serviceId)).unwrap().then(data => {
-            setTimeout(() => {
-                setLoading(false)
-                if (data.status == 200) {
-                    toast.success(data.msg)
-                    // Emit real-time order notification to the freelancer
-                    if (socket.current && window.__serviceOwnerUserId) {
-                        const userInfo = JSON.parse(localStorage.getItem('userInfo'))
-                        socket.current.emit('sendOrderNotification', {
-                            freelancerId: window.__serviceOwnerUserId,
-                            clientName: userInfo?.username || userInfo?.fullName || 'A client',
-                            serviceTitle: window.__serviceTitle || 'your service',
+        dispatch(createPaymentOrder(serviceId)).unwrap().then(payData => {
+            setLoading(false)
+            if (payData.status === 400) { toast.info(payData.msg); return; }
+            if (payData.status === 403) { toast.error(payData.msg); navigate('/login'); return; }
+            if (payData.status === 404) { toast.error(payData.msg); return; }
+            if (payData.status !== 200) { toast.error(payData.msg); return; }
+
+            // Load Razorpay script dynamically
+            const script = document.createElement('script')
+            script.src = 'https://checkout.razorpay.com/v1/checkout.js'
+            script.onload = () => {
+                const options = {
+                    key: payData.keyId,
+                    amount: payData.amount,
+                    currency: payData.currency,
+                    name: 'Servezy',
+                    description: payData.serviceTitle,
+                    order_id: payData.razorpayOrderId,
+                    handler: function (response) {
+                        // Payment success — verify on backend
+                        setLoading(true)
+                        dispatch(verifyPayment({
+                            serviceId,
+                            razorpayOrderId: response.razorpay_order_id,
+                            razorpayPaymentId: response.razorpay_payment_id,
+                            razorpaySignature: response.razorpay_signature,
+                        })).unwrap().then(verifyData => {
+                            setLoading(false)
+                            if (verifyData.status === 200) {
+                                toast.success('Payment successful! Order placed.')
+                                if (socket.current && window.__serviceOwnerUserId) {
+                                    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+                                    socket.current.emit('sendOrderNotification', {
+                                        freelancerId: window.__serviceOwnerUserId,
+                                        clientName: userInfo?.username || userInfo?.fullName || 'A client',
+                                        serviceTitle: window.__serviceTitle || 'your service',
+                                    })
+                                }
+                                navigate(`/dashboard/client/${id}/orders`)
+                            } else {
+                                toast.error(verifyData.msg || 'Payment verification failed')
+                            }
+                        }).catch(() => {
+                            setLoading(false)
+                            toast.error('Payment verification failed')
                         })
+                    },
+                    prefill: {
+                        name: JSON.parse(localStorage.getItem('userInfo'))?.fullName || '',
+                        email: JSON.parse(localStorage.getItem('userInfo'))?.email || '',
+                    },
+                    theme: { color: '#10B981' },
+                    modal: {
+                        ondismiss: () => { toast.info('Payment cancelled') }
                     }
-                    navigate(`/dashboard/client/${id}/orders`)
                 }
-                else if (data.status == 400) {
-                    toast.info(data.msg)
-                    fetchData()
-                }
-                else if (data.status == 403) {
-                    toast.error(data.msg)
-                    navigate('/login')
-                }
-                else if (data.status == 404) {
-                    toast.error(data.msg)
-                    navigate('/404')
-                }
-                else {
-                    toast.error(data.msg)
-                    fetchData()
-                }
-            }, 1000);
-        }).catch((rejectedValueOrSerializedError) => {
-            setTimeout(() => {
-                setLoading(false)
-                toast.error(rejectedValueOrSerializedError)
-                fetchData()
-            }, 1000);
+                const rzp = new window.Razorpay(options)
+                rzp.open()
+            }
+            script.onerror = () => { toast.error('Failed to load payment gateway') }
+            document.body.appendChild(script)
+        }).catch(() => {
+            setLoading(false)
+            toast.error('Could not initiate payment')
         })
     }
 
@@ -289,7 +314,7 @@ export default function ServiceDetails({ type }) {
                                                 <>
                                                     <div className="bottom-buttons">
                                                         <HashLink className="go-back-button" to={`/dashboard/client/${id}/services`}><button>Go Back</button></HashLink>
-                                                        <button onClick={handleOrder}>Make Order</button>
+                                                        <button onClick={handleOrder}>Pay & Order 💳</button>
                                                     </div>
                                                 </>
                                             }

@@ -12,6 +12,7 @@ const {
 } = require("../controllers/ServicesController");
 const { createTestimonial } = require("../controllers/TestimonialsController");
 const { findUserById } = require("../controllers/UserController");
+const { createPaymentOrder, verifyAndCreateOrder } = require("../controllers/PaymentController");
 const VerifyToken = require("../middleware/Auth");
 const route = express.Router();
 
@@ -162,6 +163,47 @@ route.post("/testimonial/:orderId", VerifyToken, async (req, res) => {
       return res.json({ status: 403, msg: createdTestimonial });
     }
     return res.json({ status: 200, msg: createdTestimonial });
+  } catch (error) {
+    return res.json({ status: 505, msg: "Error Occured: " + error.message });
+  }
+});
+
+// Payment — create Razorpay order
+route.post("/payment/create", VerifyToken, async (req, res) => {
+  try {
+    const result = await createPaymentOrder(req.userId, req.body.serviceId);
+    if (result === "User Doesn't Exists" || result === "Service Doesn't Exists") {
+      return res.json({ status: 404, msg: result });
+    }
+    if (result === "You Don't Have Permission") {
+      return res.json({ status: 403, msg: result });
+    }
+    if (result === "You Already Have A Uncompleted Order For This Service") {
+      return res.json({ status: 400, msg: result });
+    }
+    return res.json({ status: 200, ...result });
+  } catch (error) {
+    return res.json({ status: 505, msg: "Error Occured: " + error.message });
+  }
+});
+
+// Payment — verify & save order
+route.post("/payment/verify", VerifyToken, async (req, res) => {
+  try {
+    const { serviceId, razorpayOrderId, razorpayPaymentId, razorpaySignature } = req.body;
+    const result = await verifyAndCreateOrder(
+      req.userId, serviceId, razorpayOrderId, razorpayPaymentId, razorpaySignature
+    );
+    if (result === "User Doesn't Exists" || result === "Service Doesn't Exists") {
+      return res.json({ status: 404, msg: result });
+    }
+    if (result === "You Don't Have Permission") {
+      return res.json({ status: 403, msg: result });
+    }
+    if (result === "Payment Verification Failed") {
+      return res.json({ status: 400, msg: result });
+    }
+    return res.json({ status: 200, msg: result });
   } catch (error) {
     return res.json({ status: 505, msg: "Error Occured: " + error.message });
   }
