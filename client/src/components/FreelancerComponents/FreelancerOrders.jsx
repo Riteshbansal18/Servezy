@@ -105,7 +105,7 @@ export default function FreelancerOrders() {
                                         </div>
                                     </div>
                                     <hr />
-                                    <div className="servicePrice">Price: {order.serviceInfo.price} $</div>
+                                    <div className="servicePrice">Price: ₹{order.serviceInfo.price}</div>
                                     <hr />
                                     <div className="serviceState">
                                         Status: {order.status === 'OnGoing'

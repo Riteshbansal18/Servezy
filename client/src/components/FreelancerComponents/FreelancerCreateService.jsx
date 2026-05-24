@@ -111,8 +111,8 @@ export default function FreelancerCreateService() {
                                 <textarea name="description" maxLength={1050} ref={description} id="description" placeholder="Enter Description"></textarea>
                             </div>
                             <div className="form-section">
-                                <label htmlFor="price">Price ($)</label>
-                                <input type="text" name="price" ref={price} placeholder="Enter Price" id="price" />
+                                <label htmlFor="price">Price (₹)</label>
+                                <input type="text" name="price" ref={price} placeholder="Enter Price in ₹ (min ₹5)" id="price" />
                             </div>
                             <div className="form-section">
                                 <label className="images" htmlFor="images">Select Images (2–6)</label>

@@ -28,13 +28,13 @@ const createPaymentOrder = async (clientId, serviceId) => {
   });
   if (existing) return "You Already Have A Uncompleted Order For This Service";
 
-  // Amount in paise (1 USD = ~83 INR, price is in USD)
-  const amountInPaise = Math.round(service.price * 83 * 100);
+  // Amount in paise (price is already in INR)
+  const amountInPaise = Math.round(service.price * 100);
 
   const razorpayOrder = await razorpay.orders.create({
     amount: amountInPaise,
     currency: "INR",
-    receipt: `receipt_${clientId}_${serviceId}_${Date.now()}`,
+    receipt: `rcpt_${Date.now().toString().slice(-10)}`,
     notes: {
       serviceId: serviceId.toString(),
       clientId: clientId.toString(),

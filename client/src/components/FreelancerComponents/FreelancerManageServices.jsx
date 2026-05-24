@@ -109,7 +109,7 @@ export default function FreelancerManageServices() {
                                     {data.allServices.map((service, i) => <tr key={service._id}>
                                         <td>{i + 1}</td>
                                         <td>{service.title}</td>
-                                        <td>{service.price} $</td>
+                                        <td>{service.price} ₹</td>
                                         <td>
                                             <NavLink to={`/dashboard/freelancer/${id}/services/update/${service._id}`}><button>Update</button></NavLink>
                                             <button onClick={e => handleDeleteService(service._id)}>Delete</button>

@@ -124,7 +124,7 @@ export default function ClientOrders() {
                                         </div>
                                         <hr />
                                         <div className="servicePrice">
-                                            Price: {order.serviceInfo.price} $
+                                            Price: ₹{order.serviceInfo.price}
                                         </div>
                                         <hr />
                                         <div className="serviceState">

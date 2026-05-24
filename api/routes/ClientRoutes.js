@@ -181,8 +181,13 @@ route.post("/payment/create", VerifyToken, async (req, res) => {
     if (result === "You Already Have A Uncompleted Order For This Service") {
       return res.json({ status: 400, msg: result });
     }
-    return res.json({ status: 200, ...result });
+    // result is an object here — return it
+    if (typeof result === "object" && result.razorpayOrderId) {
+      return res.json({ status: 200, ...result });
+    }
+    return res.json({ status: 505, msg: "Unexpected error" });
   } catch (error) {
+    console.log("Payment create error:", error);
     return res.json({ status: 505, msg: "Error Occured: " + error.message });
   }
 });

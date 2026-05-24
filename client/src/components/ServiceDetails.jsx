@@ -140,13 +140,19 @@ export default function ServiceDetails({ type }) {
         setLoading(true)
         dispatch(createPaymentOrder(serviceId)).unwrap().then(payData => {
             setLoading(false)
+            if (!payData) { toast.error('Could not connect to server'); return; }
             if (payData.status === 400) { toast.info(payData.msg); return; }
             if (payData.status === 403) { toast.error(payData.msg); navigate('/login'); return; }
             if (payData.status === 404) { toast.error(payData.msg); return; }
-            if (payData.status !== 200) { toast.error(payData.msg); return; }
+            if (payData.status === 505) { toast.error(payData.msg); return; }
+            if (payData.status !== 200) { toast.error(payData.msg || 'Payment init failed'); return; }
 
             // Load Razorpay script dynamically
+            const existingScript = document.getElementById('razorpay-script')
+            if (existingScript) existingScript.remove()
+
             const script = document.createElement('script')
+            script.id = 'razorpay-script'
             script.src = 'https://checkout.razorpay.com/v1/checkout.js'
             script.onload = () => {
                 const options = {
@@ -157,7 +163,6 @@ export default function ServiceDetails({ type }) {
                     description: payData.serviceTitle,
                     order_id: payData.razorpayOrderId,
                     handler: function (response) {
-                        // Payment success — verify on backend
                         setLoading(true)
                         dispatch(verifyPayment({
                             serviceId,
@@ -166,6 +171,7 @@ export default function ServiceDetails({ type }) {
                             razorpaySignature: response.razorpay_signature,
                         })).unwrap().then(verifyData => {
                             setLoading(false)
+                            if (!verifyData) { toast.error('Verification failed'); return; }
                             if (verifyData.status === 200) {
                                 toast.success('Payment successful! Order placed.')
                                 if (socket.current && window.__serviceOwnerUserId) {
@@ -180,9 +186,9 @@ export default function ServiceDetails({ type }) {
                             } else {
                                 toast.error(verifyData.msg || 'Payment verification failed')
                             }
-                        }).catch(() => {
+                        }).catch((err) => {
                             setLoading(false)
-                            toast.error('Payment verification failed')
+                            toast.error('Payment verification failed: ' + (err || ''))
                         })
                     },
                     prefill: {
@@ -197,11 +203,14 @@ export default function ServiceDetails({ type }) {
                 const rzp = new window.Razorpay(options)
                 rzp.open()
             }
-            script.onerror = () => { toast.error('Failed to load payment gateway') }
+            script.onerror = () => {
+                setLoading(false)
+                toast.error('Failed to load payment gateway. Check your internet connection.')
+            }
             document.body.appendChild(script)
-        }).catch(() => {
+        }).catch((err) => {
             setLoading(false)
-            toast.error('Could not initiate payment')
+            toast.error('Could not initiate payment: ' + (err || 'Unknown error'))
         })
     }
 
@@ -290,12 +299,12 @@ export default function ServiceDetails({ type }) {
                                             </div>
                                             {type == 1 ?
                                                 <div className="service-price">
-                                                    Price: {data.selectedService.price} $
+                                                    Price: ₹{data.selectedService.price}
                                                 </div>
                                                 :
                                                 <div className="service-price-provider">
                                                     <div className="price">
-                                                        Price {data.selectedService.price} $
+                                                        Price ₹{data.selectedService.price}
                                                     </div>
                                                     <div className="provider">
                                                         <span>Service Provided By</span>
@@ -349,7 +358,7 @@ export default function ServiceDetails({ type }) {
                                     </div>
                                     <div className="service-price-provider">
                                         <div className="price">
-                                            Price {data.clientOrderInfo.serviceInfo.price} $
+                                            Price ₹{data.clientOrderInfo.serviceInfo.price}
                                         </div>
                                         <div className="provider">
                                             <span>Service Provided By</span>

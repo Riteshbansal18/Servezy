@@ -155,7 +155,7 @@ export default function FreelancerPublicProfile() {
                     </p>
                     <div className="pub-service-footer">
                       <StarRating rating={service.serviceRating} />
-                      <span className="pub-price">${service.price}</span>
+                      <span className="pub-price">₹{service.price}</span>
                     </div>
                   </div>
 
