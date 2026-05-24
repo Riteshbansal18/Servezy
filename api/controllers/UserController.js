@@ -109,6 +109,76 @@ const loginUser = async (username, password) => {
   return null;
 };
 
+const getFreelancerPublicProfile = async (username) => {
+  const user = await User.findOne({ username });
+  if (!user) return "User Not Found";
+  if (user.role !== "freelancer") return "Not A Freelancer";
+
+  const Service = require("../models/serviceModel");
+  const Testimonial = require("../models/testimonialModel");
+
+  const services = await Service.find({ userId: user._id }).sort({ updatedAt: -1 });
+
+  let servicesWithRatings = [];
+  let totalRating = 0;
+  let ratedCount = 0;
+
+  for (let service of services) {
+    const testimonials = await Testimonial.find({ serviceId: service._id })
+      .sort({ createdAt: -1 })
+      .limit(5);
+
+    let avgRating = 0;
+    if (testimonials.length > 0) {
+      const sum = testimonials.reduce((acc, t) => acc + parseInt(t.rating), 0);
+      avgRating = parseFloat((sum / testimonials.length).toFixed(1));
+      totalRating += avgRating;
+      ratedCount++;
+    }
+
+    // Fetch reviewer names for testimonials
+    const testimonialsWithNames = await Promise.all(
+      testimonials.map(async (t) => {
+        const reviewer = await User.findById(t.clientId).select("username image");
+        return {
+          _id: t._id,
+          text: t.text,
+          rating: t.rating,
+          createdAt: t.createdAt,
+          reviewer: reviewer
+            ? { username: reviewer.username, image: reviewer.image }
+            : { username: "Anonymous", image: "no-image.png" },
+        };
+      })
+    );
+
+    servicesWithRatings.push({
+      _id: service._id,
+      title: service.title,
+      description: service.description,
+      price: service.price,
+      images: service.images,
+      category: service.category,
+      deliveryTime: service.deliveryTime,
+      createdAt: service.createdAt,
+      serviceRating: avgRating,
+      testimonials: testimonialsWithNames,
+    });
+  }
+
+  const overallRating =
+    ratedCount > 0 ? parseFloat((totalRating / ratedCount).toFixed(1)) : 0;
+
+  const { password, otp, otpExpiry, email, ...safeUser } = user.toObject();
+
+  return {
+    user: safeUser,
+    services: servicesWithRatings,
+    overallRating,
+    totalServices: services.length,
+  };
+};
+
 const updateUser = async (userId, fullName, age, username, image, imageFile) => {
   const selectedUser = await findUserById(userId);
   if (selectedUser) {
@@ -146,4 +216,5 @@ module.exports = {
   resendOtp,
   forgotPassword,
   resetPassword,
+  getFreelancerPublicProfile,
 };

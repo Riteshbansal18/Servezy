@@ -2578,3 +2578,432 @@ nav button a {
   .ClientOrders .services { grid-template-columns: 1fr; }
 }
 /* End ClientOrders Section */
+
+/* ===================== FreelancerPublicProfile ===================== */
+.FreelancerPublicProfile {
+  min-height: 100vh;
+  background: var(--color-bg);
+  padding-bottom: 60px;
+}
+
+.pub-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+/* Hero */
+.pub-hero {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  background: var(--color-white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  padding: 32px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.pub-avatar-wrap {
+  flex-shrink: 0;
+}
+
+.pub-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--color-border-orange);
+}
+
+.pub-hero-info {
+  flex: 1;
+  min-width: 180px;
+}
+
+.pub-name {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--color-dark);
+  margin: 0 0 4px;
+}
+
+.pub-username {
+  color: var(--color-grey);
+  font-size: 14px;
+  margin: 0 0 14px;
+}
+
+.pub-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pub-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pub-badge-role {
+  background: var(--color-border-orange);
+  color: var(--color-green);
+}
+
+.pub-badge-services {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.pub-badge-rating {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+.pub-hero-cta {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* Buttons */
+.pub-btn-primary {
+  background: var(--color-orange);
+  color: white;
+  border: none;
+  padding: 10px 22px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.pub-btn-primary:hover {
+  background: var(--color-green);
+}
+
+.pub-btn-secondary {
+  background: transparent;
+  color: var(--color-orange);
+  border: 2px solid var(--color-orange);
+  padding: 8px 22px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.pub-btn-secondary:hover {
+  background: var(--color-border-orange);
+}
+
+/* Section */
+.pub-section {
+  margin-bottom: 48px;
+}
+
+.pub-section-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-dark);
+  margin: 0 0 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--color-border-orange);
+}
+
+/* Services Grid */
+.pub-services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.pub-service-card {
+  background: var(--color-white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: var(--transition);
+  border: 1px solid var(--color-border-orange);
+}
+
+.pub-service-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.pub-service-slider {
+  height: 200px;
+  overflow: hidden;
+}
+
+.pub-service-slider .swiper-container {
+  height: 200px;
+}
+
+.pub-service-slider img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.pub-service-body {
+  padding: 16px;
+}
+
+.pub-service-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.pub-category {
+  background: var(--color-border-orange);
+  color: var(--color-green);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.pub-delivery {
+  font-size: 12px;
+  color: var(--color-grey);
+}
+
+.pub-service-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-dark);
+  margin: 0 0 8px;
+}
+
+.pub-service-desc {
+  font-size: 13px;
+  color: var(--color-grey);
+  line-height: 1.6;
+  margin: 0 0 12px;
+}
+
+.pub-read-more {
+  background: none;
+  border: none;
+  color: var(--color-orange);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.pub-service-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-border-orange);
+}
+
+.pub-price {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--color-orange);
+}
+
+/* Stars */
+.pub-stars {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.pub-stars span {
+  font-size: 13px;
+  color: var(--color-grey);
+  margin-left: 4px;
+}
+
+.star {
+  width: 14px;
+  height: 14px;
+  fill: #d1d5db;
+}
+
+.star.filled {
+  fill: #f59e0b;
+}
+
+/* Testimonials */
+.pub-testimonials {
+  padding: 14px 16px;
+  background: var(--color-bg);
+  border-top: 1px solid var(--color-border-orange);
+}
+
+.pub-testimonials-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-dark);
+  margin: 0 0 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pub-testimonial {
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--color-border-orange);
+}
+
+.pub-testimonial:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.pub-testimonial-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.pub-reviewer-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--color-border-orange);
+}
+
+.pub-reviewer-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-dark);
+  display: block;
+}
+
+.pub-review-stars {
+  display: flex;
+  gap: 2px;
+  margin-top: 2px;
+}
+
+.pub-review-stars .star {
+  width: 11px;
+  height: 11px;
+}
+
+.pub-testimonial-text {
+  font-size: 13px;
+  color: var(--color-grey);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* CTA Banner */
+.pub-cta-banner {
+  background: linear-gradient(135deg, var(--color-orange), var(--color-green));
+  border-radius: var(--radius);
+  padding: 36px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.pub-cta-text h3 {
+  font-size: 20px;
+  font-weight: 800;
+  color: white;
+  margin: 0 0 6px;
+}
+
+.pub-cta-text p {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+}
+
+.pub-cta-banner .pub-btn-primary {
+  background: white;
+  color: var(--color-green);
+  font-size: 15px;
+  padding: 12px 28px;
+}
+
+.pub-cta-banner .pub-btn-primary:hover {
+  background: var(--color-border-orange);
+}
+
+/* Error page */
+.pub-error-page {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pub-error-box {
+  text-align: center;
+  background: var(--color-white);
+  padding: 48px 40px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+}
+
+.pub-error-box h2 {
+  font-size: 22px;
+  color: var(--color-dark);
+  margin-bottom: 20px;
+}
+
+.pub-error-box button {
+  background: var(--color-orange);
+  color: white;
+  border: none;
+  padding: 10px 28px;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pub-empty {
+  color: var(--color-grey);
+  font-size: 15px;
+  padding: 20px 0;
+}
+
+@media (max-width: 600px) {
+  .pub-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+  }
+  .pub-hero-cta {
+    flex-direction: row;
+    width: 100%;
+  }
+  .pub-btn-primary, .pub-btn-secondary {
+    flex: 1;
+    text-align: center;
+  }
+  .pub-cta-banner {
+    flex-direction: column;
+    text-align: center;
+  }
+  .pub-services-grid {
+    grid-template-columns: 1fr;
+  }
+}
+/* ===================== End FreelancerPublicProfile ===================== */

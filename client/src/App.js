@@ -18,6 +18,7 @@ import FreelancerUpdateService from "./components/FreelancerComponents/Freelance
 import FreelancerOrders from "./components/FreelancerComponents/FreelancerOrders";
 import ServiceDetails from "./components/ServiceDetails";
 
+import FreelancerPublicProfile from "./components/FreelancerPublicProfile";
 import ClientDashboard from "./components/ClientComponents/ClientDashboard";
 import ClientFreelancers from "./components/ClientComponents/ClientFreelancers";
 import ClientOrders from "./components/ClientComponents/ClientOrders";
@@ -94,6 +95,7 @@ function App() {
               element={<Profile type="2" />}
             />
           </Route>
+          <Route path="/freelancer/:username" element={<FreelancerPublicProfile />} />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
       </Router>

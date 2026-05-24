@@ -8,6 +8,7 @@ const {
   updateService,
 } = require("../controllers/ServicesController");
 const { findFreelancerOrders } = require("../controllers/OrdersController");
+const { getFreelancerPublicProfile } = require("../controllers/UserController");
 const VerifyToken = require("../middleware/Auth");
 const { createServiceUpload } = require("../middleware/uploadImage");
 const route = express.Router();
@@ -123,6 +124,22 @@ route.get("/orders", VerifyToken, async (req, res) => {
       return res.json({ status: 404, msg: freelancerOrders });
     }
     return res.json({ status: 200, freelancerOrders });
+  } catch (error) {
+    return res.json({ status: 505, msg: "Error Occured: " + error.message });
+  }
+});
+
+// Public profile — no auth required
+route.get("/public/:username", async (req, res) => {
+  try {
+    const profile = await getFreelancerPublicProfile(req.params.username);
+    if (profile === "User Not Found") {
+      return res.json({ status: 404, msg: profile });
+    }
+    if (profile === "Not A Freelancer") {
+      return res.json({ status: 403, msg: profile });
+    }
+    return res.json({ status: 200, profile });
   } catch (error) {
     return res.json({ status: 505, msg: "Error Occured: " + error.message });
   }
