@@ -207,11 +207,23 @@ const getFreelancerPublicProfile = async (username) => {
 
   const { password, otp, otpExpiry, email, ...safeUser } = user.toObject();
 
+  // Completed orders count
+  const Service = require("../models/serviceModel");
+  const allServices = await Service.find({ userId: user._id });
+  const serviceIds = allServices.map(s => s._id);
+  const Order = require("../models/orderModel");
+  const completedOrders = await Order.countDocuments({
+    serviceId: { $in: serviceIds },
+    status: "Completed",
+  });
+
   return {
     user: safeUser,
     services: servicesWithRatings,
     overallRating,
     totalServices: services.length,
+    completedOrders,
+    memberSince: user.createdAt,
   };
 };
 
