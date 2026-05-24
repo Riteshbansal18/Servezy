@@ -4,6 +4,9 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { existsSync, unlinkSync } = require("fs");
 const { sendOtpEmail } = require("../config/mailer");
+const Service = require("../models/serviceModel");
+const Order = require("../models/orderModel");
+const Testimonial = require("../models/testimonialModel");
 
 // Generate a 6-digit OTP
 const generateOtp = () => Math.floor(100000 + Math.random() * 900000).toString();
@@ -110,9 +113,6 @@ const loginUser = async (username, password) => {
 };
 
 const getPublicFreelancersList = async () => {
-  const Service = require("../models/serviceModel");
-  const Testimonial = require("../models/testimonialModel");
-
   const freelancers = await User.find({ role: "freelancer", isVerified: true }).select(
     "-password -otp -otpExpiry -email"
   );
@@ -149,9 +149,6 @@ const getFreelancerPublicProfile = async (username) => {
   const user = await User.findOne({ username });
   if (!user) return "User Not Found";
   if (user.role !== "freelancer") return "Not A Freelancer";
-
-  const Service = require("../models/serviceModel");
-  const Testimonial = require("../models/testimonialModel");
 
   const services = await Service.find({ userId: user._id }).sort({ updatedAt: -1 });
 
@@ -208,10 +205,8 @@ const getFreelancerPublicProfile = async (username) => {
   const { password, otp, otpExpiry, email, ...safeUser } = user.toObject();
 
   // Completed orders count
-  const Service = require("../models/serviceModel");
-  const allServices = await Service.find({ userId: user._id });
-  const serviceIds = allServices.map(s => s._id);
-  const Order = require("../models/orderModel");
+  const allUserServices = await Service.find({ userId: user._id });
+  const serviceIds = allUserServices.map(s => s._id);
   const completedOrders = await Order.countDocuments({
     serviceId: { $in: serviceIds },
     status: "Completed",
