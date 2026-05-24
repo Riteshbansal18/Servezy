@@ -10,6 +10,7 @@ const {
   resendOtp,
   forgotPassword,
   resetPassword,
+  getPublicFreelancersList,
 } = require("../controllers/UserController");
 const {
   createProfileUploadImage,
@@ -149,6 +150,16 @@ route.post("/contact", async (req, res) => {
     }
     await sendContactEmail(fullName, email, message);
     return res.json({ msg: "Message sent successfully", status: 200 });
+  } catch (err) {
+    return res.json({ msg: "Error Occured: " + err.message, status: 505 });
+  }
+});
+
+// Public — no auth — returns all freelancers with service count and rating
+route.get("/freelancers", async (req, res) => {
+  try {
+    const freelancers = await getPublicFreelancersList();
+    return res.json({ status: 200, freelancers });
   } catch (err) {
     return res.json({ msg: "Error Occured: " + err.message, status: 505 });
   }

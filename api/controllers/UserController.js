@@ -109,6 +109,42 @@ const loginUser = async (username, password) => {
   return null;
 };
 
+const getPublicFreelancersList = async () => {
+  const Service = require("../models/serviceModel");
+  const Testimonial = require("../models/testimonialModel");
+
+  const freelancers = await User.find({ role: "freelancer", isVerified: true }).select(
+    "-password -otp -otpExpiry -email"
+  );
+
+  const result = [];
+  for (let f of freelancers) {
+    const services = await Service.find({ userId: f._id });
+    let totalRating = 0;
+    let ratedCount = 0;
+    for (let s of services) {
+      const testimonials = await Testimonial.find({ serviceId: s._id });
+      if (testimonials.length > 0) {
+        const sum = testimonials.reduce((acc, t) => acc + parseInt(t.rating), 0);
+        totalRating += sum / testimonials.length;
+        ratedCount++;
+      }
+    }
+    const overallRating =
+      ratedCount > 0 ? parseFloat((totalRating / ratedCount).toFixed(1)) : 0;
+
+    result.push({
+      _id: f._id,
+      fullName: f.fullName,
+      username: f.username,
+      image: f.image,
+      totalServices: services.length,
+      overallRating,
+    });
+  }
+  return result;
+};
+
 const getFreelancerPublicProfile = async (username) => {
   const user = await User.findOne({ username });
   if (!user) return "User Not Found";
@@ -217,4 +253,5 @@ module.exports = {
   forgotPassword,
   resetPassword,
   getFreelancerPublicProfile,
+  getPublicFreelancersList,
 };
