@@ -3,7 +3,7 @@ const { getServiceRating } = require("./TestimonialsController");
 const { findServiceById } = require("./ServicesController");
 const { findUserById } = require("./UserController");
 const { sendMessage } = require("./ChatController");
-const { sendOrderNotificationEmail } = require("../config/mailer");
+const { sendOrderNotificationEmail, sendOrderCompletedEmail, sendOrderCancelledEmail } = require("../config/mailer");
 
 const findOrder = async (orderId) => {
   const selectedOrder = await Order.findById(orderId);
@@ -127,10 +127,41 @@ const updateOrder = async (clientId, orderId, orderState) => {
       }
       const updatedOrder = await Order.updateOne(
         { clientId, _id: orderId, status: "OnGoing" },
-        {
-          status: orderState,
-        }
+        { status: orderState }
       );
+
+      // Send email notifications after successful update
+      if (updatedOrder.modifiedCount === 1) {
+        try {
+          const serviceInfo = await findServiceById(selectedOrder.serviceId.toString());
+          const freelancer = await findUserById(serviceInfo.userId);
+
+          if (orderState === "Completed") {
+            // Notify client that order is completed
+            if (selectedClient.email) {
+              await sendOrderCompletedEmail(
+                selectedClient.email,
+                selectedClient.fullName || selectedClient.username,
+                freelancer.fullName || freelancer.username,
+                serviceInfo.title
+              );
+            }
+          } else if (orderState === "Cancelled") {
+            // Notify freelancer that order was cancelled
+            if (freelancer && freelancer.email) {
+              await sendOrderCancelledEmail(
+                freelancer.email,
+                freelancer.fullName || freelancer.username,
+                selectedClient.fullName || selectedClient.username,
+                serviceInfo.title
+              );
+            }
+          }
+        } catch (emailErr) {
+          console.log("Order status email notification failed:", emailErr.message);
+        }
+      }
+
       return updatedOrder;
     }
     return "Order doesn't exists";
